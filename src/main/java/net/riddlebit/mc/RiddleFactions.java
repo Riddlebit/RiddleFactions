@@ -1,6 +1,8 @@
 package net.riddlebit.mc;
 
 import net.riddlebit.mc.commands.TestCommand;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RiddleFactions extends JavaPlugin {
