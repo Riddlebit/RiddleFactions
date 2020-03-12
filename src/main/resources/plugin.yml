@@ -1,0 +1,8 @@
+name: net.riddlebit.mc.RiddleFactions
+version: 0.1
+main: net.riddlebit.mc.RiddleFactions
+
+commands:
+  test:
+    description: Just a test command
+    usage: /test
