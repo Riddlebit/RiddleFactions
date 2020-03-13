@@ -2,10 +2,13 @@ package net.riddlebit.mc.controller;
 
 import dev.morphia.query.Query;
 import net.riddlebit.mc.RiddleFactions;
+import net.riddlebit.mc.data.ChunkData;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.Invite;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -163,6 +166,50 @@ public class FactionController {
         return true;
     }
 
+    public boolean claimChunk(Player player) {
+        if (!isPlayerInFaction(player)) {
+            player.sendMessage("You're not in a faction...");
+            return true;
+        }
+
+        if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
+            player.sendMessage("You cannot claim a chunk here...");
+            return true;
+        }
+
+        Chunk chunk = player.getLocation().getChunk();
+        ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
+        FactionData factionData = getFactionForPlayer(player);
+
+        // Check if this chunk is claimed
+        if (isChunkOwnedByFaction(chunkData)) {
+            player.sendMessage("This chunk is already claimed...");
+            return true;
+        }
+
+        // Check if border chunks are claimed
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
+                int currentX = chunk.getX()+x;
+                int currentZ = chunk.getZ()+z;
+                ChunkData currentChunkData = new ChunkData(currentX, currentZ);
+                FactionData chunkFactionData = getChunkOwner(currentChunkData);
+                if (chunkFactionData != null && !chunkFactionData.equals(factionData)) {
+                    player.sendMessage("Too close to another faction!");
+                    return true;
+                }
+            }
+        }
+
+        // Check reputation
+
+        factionData.ownedChunks.add(chunkData);
+        plugin.datastore.save(factionData);
+
+        player.sendMessage("You claimed this chunk!");
+        return true;
+    }
+
     public boolean isPlayerInFaction(Player player) {
         return getFactionForPlayer(player) != null;
     }
@@ -227,6 +274,28 @@ public class FactionController {
                 plugin.datastore.save(playerData);
             }
         }
+    }
+
+    public boolean isChunkOwnedByFaction(ChunkData chunkData) {
+        for (FactionData factionData : factions.values()) {
+            for (ChunkData ownedChunkData : factionData.ownedChunks) {
+                if (ownedChunkData.equals(chunkData)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public FactionData getChunkOwner(ChunkData chunkData) {
+        for (FactionData factionData : factions.values()) {
+            for (ChunkData ownedChunkData : factionData.ownedChunks) {
+                if (ownedChunkData.equals(chunkData)) {
+                    return factionData;
+                }
+            }
+        }
+        return null;
     }
 
 }

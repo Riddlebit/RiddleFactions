@@ -49,6 +49,8 @@ public class RFCommand implements CommandExecutor {
                 return leaveFaction(player);
             case "status":
                 return status(player);
+            case "claim":
+                return claimChunk(player);
         }
 
         return false;
@@ -92,6 +94,10 @@ public class RFCommand implements CommandExecutor {
 
         player.sendMessage(status);
         return true;
+    }
+
+    private boolean claimChunk(Player player) {
+        return plugin.factionController.claimChunk(player);
     }
 
 }

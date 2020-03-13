@@ -21,6 +21,7 @@ public class FactionData {
     public FactionData(PlayerData playerData) {
         players = new ArrayList<>();
         players.add(playerData);
+        ownedChunks = new ArrayList<>();
     }
 
     @Id
@@ -40,6 +41,10 @@ public class FactionData {
             reputation += playerData.reputation;
         }
         return reputation;
+    }
+
+    public boolean isChunkOwnedByFaction(ChunkData chunkData) {
+        return ownedChunks.contains(chunkData);
     }
 
     @Override
