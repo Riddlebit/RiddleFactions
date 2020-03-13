@@ -3,6 +3,7 @@ package net.riddlebit.mc.controller;
 import dev.morphia.query.Query;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.PlayerData;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -41,6 +42,13 @@ public class PlayerController {
 
     public PlayerData getPlayer(Player player) {
         return players.get(player.getUniqueId());
+    }
+
+    public void savePlayers() {
+        plugin.getLogger().info("Saving players to database");
+        for (PlayerData playerData : players.values()) {
+            plugin.datastore.save(playerData);
+        }
     }
 
 }

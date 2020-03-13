@@ -9,6 +9,7 @@ import net.riddlebit.mc.controller.FactionController;
 import net.riddlebit.mc.controller.PlayerController;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RiddleFactions extends JavaPlugin {
@@ -40,11 +41,16 @@ public class RiddleFactions extends JavaPlugin {
         playerController = new PlayerController(this);
         factionController = new FactionController(this);
 
+        // Schedule reputation updating
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.updateReputation(), 20, 20);
+
+        // Schedule database saving
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> playerController.savePlayers(), 12000, 12000);
     }
 
     @Override
     public void onDisable() {
-
+        playerController.savePlayers();
     }
 
 }

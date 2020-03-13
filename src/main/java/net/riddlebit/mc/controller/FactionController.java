@@ -123,7 +123,7 @@ public class FactionController {
         plugin.datastore.save(factionData);
 
         player.sendMessage("You have joined " + factionData.name);
-        for (Player factionPlayer : getPlayersInFaction(factionName)) {
+        for (Player factionPlayer : getOnlinePlayersInFaction(factionData)) {
             if (factionPlayer != player) {
                 factionPlayer.sendMessage(player.getDisplayName() + " has joined your faction!");
             }
@@ -146,7 +146,7 @@ public class FactionController {
             plugin.datastore.save(factionData);
 
             // Broadcast to other faction members
-            for (Player factionPlayer : getPlayersInFaction(factionData)) {
+            for (Player factionPlayer : getOnlinePlayersInFaction(factionData)) {
                 factionPlayer.sendMessage(player.getDisplayName() + " left your faction!");
             }
 
@@ -181,18 +181,32 @@ public class FactionController {
         return null;
     }
 
-    public List<Player> getPlayersInFaction(FactionData factionData) {
+    public List<Player> getOnlinePlayersInFaction(FactionData factionData) {
         List<Player> players = new ArrayList<>();
         for (PlayerData playerData : factionData.players) {
             Player player = Bukkit.getPlayer(UUID.fromString(playerData.uuid));
-            players.add(player);
+            if (player != null && player.isOnline()) {
+                players.add(player);
+            }
         }
         return players;
     }
 
-    public List<Player> getPlayersInFaction(String factionName) {
-        FactionData factionData = getFaction(factionName);
-        return getPlayersInFaction(factionData);
+    public void updateReputation() {
+        for (FactionData factionData : factions.values()) {
+
+            int playerCount = getOnlinePlayersInFaction(factionData).size();
+
+            if (playerCount > 0) {
+
+                float reputationGain = 100f / playerCount / 3600;
+
+                for (PlayerData playerData : factionData.players) {
+                    playerData.reputation += reputationGain;
+                }
+
+            }
+        }
     }
 
 }
