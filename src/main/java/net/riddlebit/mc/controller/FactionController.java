@@ -16,12 +16,12 @@ public class FactionController {
 
     private HashMap<String, FactionData> factions;
 
-    private List<Invite> invites;
+    private Set<Invite> invites;
 
     public FactionController(RiddleFactions plugin) {
         this.plugin = plugin;
         factions = new HashMap<>();
-        invites = new ArrayList<>();
+        invites = new HashSet<>();
 
         // Load factions from database
         Query query = plugin.datastore.createQuery(FactionData.class);
@@ -85,6 +85,52 @@ public class FactionController {
         return true;
     }
 
+    public boolean joinFaction(String factionName, Player player) {
+        PlayerData playerData = plugin.playerController.getPlayer(player);
+
+        Invite invite = null;
+        for (Invite i : invites) {
+            if (i.factionData.name.equals(factionName) && i.invitee.equals(playerData)) {
+                invite = i;
+            }
+        }
+
+        if (invite == null) {
+            player.sendMessage("No invite found :(");
+            return true;
+        }
+
+        invites.remove(invite);
+
+        // Remove player from current faction
+        if (isPlayerInFaction(player)) {
+            FactionData currentFactionData = getFactionForPlayer(player);
+            currentFactionData.players.remove(playerData);
+            if (currentFactionData.players.size() > 0) {
+                plugin.datastore.save(currentFactionData);
+            } else {
+                plugin.datastore.delete(currentFactionData);
+            }
+        }
+
+        // Reset player reputation
+        playerData.reputation = 0;
+        plugin.datastore.save(playerData);
+
+        // Add player to new faction
+        FactionData factionData = invite.factionData;
+        factionData.players.add(playerData);
+        plugin.datastore.save(factionData);
+
+        player.sendMessage("You have joined " + factionData.name);
+        for (Player factionPlayer : getPlayersInFaction(factionName)) {
+            if (factionPlayer != player) {
+                factionPlayer.sendMessage(player.getDisplayName() + " has joined your faction!");
+            }
+        }
+        return true;
+    }
+
     public boolean isPlayerInFaction(Player player) {
         return getFactionForPlayer(player) != null;
     }
@@ -101,6 +147,16 @@ public class FactionController {
             }
         }
         return null;
+    }
+
+    public List<Player> getPlayersInFaction(String factionName) {
+        FactionData factionData = getFaction(factionName);
+        List<Player> players = new ArrayList<>();
+        for (PlayerData playerData : factionData.players) {
+            Player player = Bukkit.getPlayer(UUID.fromString(playerData.uuid));
+            players.add(player);
+        }
+        return players;
     }
 
 }

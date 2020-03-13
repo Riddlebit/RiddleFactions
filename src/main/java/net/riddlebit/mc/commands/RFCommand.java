@@ -37,6 +37,12 @@ public class RFCommand implements CommandExecutor {
                     return invitePlayer(playerName, player);
                 }
                 break;
+            case "join":
+                if (args.length > 1) {
+                    String factionName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                    return joinFaction(factionName, player);
+                }
+                break;
         }
         return false;
     }
@@ -44,6 +50,11 @@ public class RFCommand implements CommandExecutor {
     private boolean createFaction(String factionName, Player player) {
         if (factionName == null) return false;
         return plugin.factionController.createFaction(factionName, player);
+    }
+
+    private boolean joinFaction(String factionName, Player player) {
+        if (factionName == null) return false;
+        return plugin.factionController.joinFaction(factionName, player);
     }
 
     private boolean invitePlayer(String playerName, Player player) {
