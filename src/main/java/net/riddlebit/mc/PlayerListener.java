@@ -1,5 +1,6 @@
 package net.riddlebit.mc;
 
+import dev.morphia.query.Query;
 import net.riddlebit.mc.data.MongoPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,12 +19,19 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
 
-        MongoPlayer mongoPlayer = new MongoPlayer();
-        mongoPlayer.uuid = player.getUniqueId().toString();
-        mongoPlayer.name = player.getDisplayName();
-        mongoPlayer.reputation = 0;
+        Query<MongoPlayer> query = plugin.datastore.createQuery(MongoPlayer.class);
+        MongoPlayer mongoPlayer = query.field("uuid").equal(player.getUniqueId().toString()).first();
 
-        plugin.datastore.save(mongoPlayer);
+        if (mongoPlayer == null) {
+            mongoPlayer = new MongoPlayer();
+            mongoPlayer.uuid = player.getUniqueId().toString();
+            mongoPlayer.name = player.getDisplayName();
+            mongoPlayer.reputation = 0;
+            plugin.datastore.save(mongoPlayer);
+        } else {
+            // player exists in database
+        }
+
     }
 
 }
