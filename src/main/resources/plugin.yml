@@ -6,3 +6,6 @@ commands:
   test:
     description: Just a test command
     usage: /test
+  rf:
+    description: RiddleFactions command
+    usage: /rf [options]

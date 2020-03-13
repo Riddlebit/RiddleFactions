@@ -39,4 +39,8 @@ public class PlayerController {
         return playerData;
     }
 
+    public PlayerData getPlayer(Player player) {
+        return players.get(player.getUniqueId());
+    }
+
 }
