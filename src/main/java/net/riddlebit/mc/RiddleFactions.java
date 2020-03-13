@@ -4,6 +4,7 @@ import com.mongodb.MongoClient;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import net.riddlebit.mc.commands.TestCommand;
+import net.riddlebit.mc.controller.PlayerController;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +12,8 @@ public class RiddleFactions extends JavaPlugin {
 
     public Morphia morphia;
     public Datastore datastore;
+
+    public PlayerController playerController;
 
     @Override
     public void onEnable() {
@@ -26,6 +29,9 @@ public class RiddleFactions extends JavaPlugin {
 
         // Register listeners
         getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+
+        // Controllers
+        playerController = new PlayerController(this);
 
     }
 
