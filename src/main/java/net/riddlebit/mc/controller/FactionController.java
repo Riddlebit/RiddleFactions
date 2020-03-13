@@ -131,6 +131,38 @@ public class FactionController {
         return true;
     }
 
+    public boolean leaveFaction(Player player) {
+        if (!isPlayerInFaction(player)) {
+            player.sendMessage("You're not in a faction...");
+            return true;
+        }
+
+        FactionData factionData = getFactionForPlayer(player);
+        PlayerData playerData = plugin.playerController.getPlayer(player);
+
+        // Remove player from faction
+        factionData.players.remove(playerData);
+        if (factionData.players.size() > 0) {
+            plugin.datastore.save(factionData);
+
+            // Broadcast to other faction members
+            for (Player factionPlayer : getPlayersInFaction(factionData)) {
+                factionPlayer.sendMessage(player.getDisplayName() + " left your faction!");
+            }
+
+        } else {
+            // Delete faction if there are no players left
+            plugin.datastore.delete(factionData);
+        }
+
+        // Reset player reputation
+        playerData.reputation = 0;
+        plugin.datastore.save(playerData);
+
+        player.sendMessage("You left " + factionData.name);
+        return true;
+    }
+
     public boolean isPlayerInFaction(Player player) {
         return getFactionForPlayer(player) != null;
     }
@@ -149,14 +181,18 @@ public class FactionController {
         return null;
     }
 
-    public List<Player> getPlayersInFaction(String factionName) {
-        FactionData factionData = getFaction(factionName);
+    public List<Player> getPlayersInFaction(FactionData factionData) {
         List<Player> players = new ArrayList<>();
         for (PlayerData playerData : factionData.players) {
             Player player = Bukkit.getPlayer(UUID.fromString(playerData.uuid));
             players.add(player);
         }
         return players;
+    }
+
+    public List<Player> getPlayersInFaction(String factionName) {
+        FactionData factionData = getFaction(factionName);
+        return getPlayersInFaction(factionData);
     }
 
 }

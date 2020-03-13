@@ -43,7 +43,10 @@ public class RFCommand implements CommandExecutor {
                     return joinFaction(factionName, player);
                 }
                 break;
+            case "leave":
+                return leaveFaction(player);
         }
+
         return false;
     }
 
@@ -55,6 +58,10 @@ public class RFCommand implements CommandExecutor {
     private boolean joinFaction(String factionName, Player player) {
         if (factionName == null) return false;
         return plugin.factionController.joinFaction(factionName, player);
+    }
+
+    private boolean leaveFaction(Player player) {
+        return plugin.factionController.leaveFaction(player);
     }
 
     private boolean invitePlayer(String playerName, Player player) {
