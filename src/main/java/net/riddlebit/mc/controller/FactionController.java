@@ -3,7 +3,9 @@ package net.riddlebit.mc.controller;
 import dev.morphia.query.Query;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.FactionData;
+import net.riddlebit.mc.data.Invite;
 import net.riddlebit.mc.data.PlayerData;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -14,9 +16,12 @@ public class FactionController {
 
     private HashMap<String, FactionData> factions;
 
+    private List<Invite> invites;
+
     public FactionController(RiddleFactions plugin) {
         this.plugin = plugin;
         factions = new HashMap<>();
+        invites = new ArrayList<>();
 
         // Load factions from database
         Query query = plugin.datastore.createQuery(FactionData.class);
@@ -52,12 +57,50 @@ public class FactionController {
         return true;
     }
 
+    public boolean invite(Player inviter, Player invitee) {
+
+        if (!isPlayerInFaction(inviter)) {
+            inviter.sendMessage("You must be in a faction...");
+            return true;
+        }
+
+        FactionData factionData = getFactionForPlayer(inviter);
+        PlayerData inviterData = plugin.playerController.getPlayer(inviter);
+        PlayerData inviteeData = plugin.playerController.getPlayer(invitee);
+
+        if (factionData == null || inviterData == null || inviteeData == null) {
+            return false;
+        }
+
+        if (inviterData.equals(inviteeData)) {
+            inviter.sendMessage("You cannot invite yourself...");
+            return true;
+        }
+
+        Invite invite = new Invite(factionData, inviterData, inviteeData);
+        invites.add(invite);
+
+        inviter.sendMessage(invitee.getDisplayName() + " was invited to your faction");
+        invitee.sendMessage("You have been invited to " + factionData.name);
+        return true;
+    }
+
     public boolean isPlayerInFaction(Player player) {
+        return getFactionForPlayer(player) != null;
+    }
+
+    public FactionData getFaction(String factionName) {
+        return factions.get(factionName);
+    }
+
+    public FactionData getFactionForPlayer(Player player) {
         PlayerData playerData = plugin.playerController.getPlayer(player);
         for (FactionData factionData : factions.values()) {
-            if (factionData.players.contains(playerData)) return true;
+            if (factionData.players.contains(playerData)) {
+                return factionData;
+            }
         }
-        return false;
+        return null;
     }
 
 }

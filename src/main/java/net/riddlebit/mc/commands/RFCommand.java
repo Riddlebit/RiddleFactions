@@ -1,6 +1,7 @@
 package net.riddlebit.mc.commands;
 
 import net.riddlebit.mc.RiddleFactions;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,6 +31,12 @@ public class RFCommand implements CommandExecutor {
                     return createFaction(factionName, player);
                 }
                 break;
+            case "invite":
+                if (args.length > 1) {
+                    String playerName = args[1];
+                    return invitePlayer(playerName, player);
+                }
+                break;
         }
         return false;
     }
@@ -37,6 +44,15 @@ public class RFCommand implements CommandExecutor {
     private boolean createFaction(String factionName, Player player) {
         if (factionName == null) return false;
         return plugin.factionController.createFaction(factionName, player);
+    }
+
+    private boolean invitePlayer(String playerName, Player player) {
+        Player invitee = Bukkit.getPlayer(playerName);
+        if (invitee == null) {
+            player.sendMessage("Failed to find player " + playerName);
+            return true;
+        }
+        return plugin.factionController.invite(player, invitee);
     }
 
 }
