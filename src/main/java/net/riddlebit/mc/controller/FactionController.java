@@ -171,6 +171,17 @@ public class FactionController {
         return factions.get(factionName);
     }
 
+    public PlayerData getPlayer(Player player) {
+        for (FactionData factionData : factions.values()) {
+            for (PlayerData playerData : factionData.players) {
+                if (playerData.uuid.equals(player.getUniqueId().toString())) {
+                    return playerData;
+                }
+            }
+        }
+        return null;
+    }
+
     public FactionData getFactionForPlayer(Player player) {
         PlayerData playerData = plugin.playerController.getPlayer(player);
         for (FactionData factionData : factions.values()) {
@@ -205,6 +216,15 @@ public class FactionController {
                     playerData.reputation += reputationGain;
                 }
 
+            }
+        }
+    }
+
+    public void saveToDatabase() {
+        plugin.getLogger().info("Saving to database");
+        for (FactionData factionData : factions.values()) {
+            for (PlayerData playerData : factionData.players) {
+                plugin.datastore.save(playerData);
             }
         }
     }

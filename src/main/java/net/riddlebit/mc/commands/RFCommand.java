@@ -1,6 +1,8 @@
 package net.riddlebit.mc.commands;
 
 import net.riddlebit.mc.RiddleFactions;
+import net.riddlebit.mc.data.FactionData;
+import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,6 +47,8 @@ public class RFCommand implements CommandExecutor {
                 break;
             case "leave":
                 return leaveFaction(player);
+            case "status":
+                return status(player);
         }
 
         return false;
@@ -71,6 +75,23 @@ public class RFCommand implements CommandExecutor {
             return true;
         }
         return plugin.factionController.invite(player, invitee);
+    }
+
+    private boolean status(Player player) {
+        FactionData factionData = plugin.factionController.getFactionForPlayer(player);
+        if (factionData == null) {
+            player.sendMessage("You're not in a faction");
+            return true;
+        }
+
+        PlayerData playerData = plugin.factionController.getPlayer(player);
+
+        String status = "";
+        status = "Faction: " + factionData.name + "\n";
+        status += "Reputation: " + (int) playerData.reputation + " / " + (int) factionData.getReputation();
+
+        player.sendMessage(status);
+        return true;
     }
 
 }

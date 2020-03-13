@@ -34,6 +34,14 @@ public class FactionData {
     @Embedded
     public List<ChunkData> ownedChunks;
 
+    public float getReputation() {
+        float reputation = 0;
+        for (PlayerData playerData : players) {
+            reputation += playerData.reputation;
+        }
+        return reputation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

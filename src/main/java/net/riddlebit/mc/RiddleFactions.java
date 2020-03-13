@@ -45,12 +45,12 @@ public class RiddleFactions extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.updateReputation(), 20, 20);
 
         // Schedule database saving
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> playerController.savePlayers(), 12000, 12000);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.saveToDatabase(), 12000, 12000);
     }
 
     @Override
     public void onDisable() {
-        playerController.savePlayers();
+        factionController.saveToDatabase();
     }
 
 }

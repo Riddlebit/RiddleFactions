@@ -44,11 +44,4 @@ public class PlayerController {
         return players.get(player.getUniqueId());
     }
 
-    public void savePlayers() {
-        plugin.getLogger().info("Saving players to database");
-        for (PlayerData playerData : players.values()) {
-            plugin.datastore.save(playerData);
-        }
-    }
-
 }
