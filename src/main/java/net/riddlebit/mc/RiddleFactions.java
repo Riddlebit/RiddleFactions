@@ -4,7 +4,7 @@ import com.mongodb.MongoClient;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import net.riddlebit.mc.commands.TestCommand;
-import net.riddlebit.mc.data.MongoPlayer;
+import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RiddleFactions extends JavaPlugin {
@@ -17,7 +17,7 @@ public class RiddleFactions extends JavaPlugin {
 
         // Database stuff
         morphia = new Morphia();
-        morphia.map(MongoPlayer.class);
+        morphia.map(PlayerData.class);
         datastore = morphia.createDatastore(new MongoClient(), "riddleFactions");
         datastore.ensureIndexes();
 
