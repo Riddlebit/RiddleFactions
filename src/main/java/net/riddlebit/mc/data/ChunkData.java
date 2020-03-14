@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class ChunkData {
 
+    public ChunkData() {}
+
     public ChunkData(int x, int z) {
         this.x = x;
         this.z = z;

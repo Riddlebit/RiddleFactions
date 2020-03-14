@@ -14,11 +14,13 @@ import java.util.Objects;
 public class FactionData {
 
     public FactionData() {
+        id = new ObjectId();
         players = new ArrayList<>();
         ownedChunks = new ArrayList<>();
     }
 
     public FactionData(PlayerData playerData) {
+        id = new ObjectId();
         players = new ArrayList<>();
         players.add(playerData);
         ownedChunks = new ArrayList<>();

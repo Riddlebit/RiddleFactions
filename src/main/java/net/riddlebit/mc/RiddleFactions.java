@@ -5,6 +5,7 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import net.riddlebit.mc.commands.RFCommand;
 import net.riddlebit.mc.commands.TestCommand;
+import net.riddlebit.mc.controller.DataManager;
 import net.riddlebit.mc.controller.FactionController;
 import net.riddlebit.mc.controller.PlayerController;
 import net.riddlebit.mc.data.FactionData;
@@ -17,6 +18,7 @@ public class RiddleFactions extends JavaPlugin {
     public Morphia morphia;
     public Datastore datastore;
 
+    public DataManager dataManager;
     public PlayerController playerController;
     public FactionController factionController;
 
@@ -29,6 +31,8 @@ public class RiddleFactions extends JavaPlugin {
         morphia.map(FactionData.class);
         datastore = morphia.createDatastore(new MongoClient(), "riddleFactions");
         datastore.ensureIndexes();
+
+        dataManager = new DataManager(this);
 
         // Register commands
         this.getCommand("test").setExecutor(new TestCommand());
@@ -45,12 +49,12 @@ public class RiddleFactions extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.updateReputation(), 20, 20);
 
         // Schedule database saving
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.saveToDatabase(), 12000, 12000);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> dataManager.save(), 12000, 12000);
     }
 
     @Override
     public void onDisable() {
-        factionController.saveToDatabase();
+        dataManager.save();
     }
 
 }

@@ -51,6 +51,8 @@ public class RFCommand implements CommandExecutor {
                 return status(player);
             case "claim":
                 return claimChunk(player);
+            case "clear":
+                return clearChunk(player);
         }
 
         return false;
@@ -86,7 +88,7 @@ public class RFCommand implements CommandExecutor {
             return true;
         }
 
-        PlayerData playerData = plugin.factionController.getPlayer(player);
+        PlayerData playerData = plugin.dataManager.getPlayerData(player);
 
         String status = "";
         status = "Faction: " + factionData.name + "\n";
@@ -98,6 +100,10 @@ public class RFCommand implements CommandExecutor {
 
     private boolean claimChunk(Player player) {
         return plugin.factionController.claimChunk(player);
+    }
+
+    private boolean clearChunk(Player player) {
+        return plugin.factionController.clearChunk(player);
     }
 
 }

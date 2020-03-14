@@ -8,6 +8,10 @@ import java.util.Objects;
 @Entity(value = "players", noClassnameStored = true)
 public class PlayerData {
 
+    public PlayerData() {
+        id = new ObjectId();
+    }
+
     @Id
     private ObjectId id;
 
