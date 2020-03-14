@@ -34,7 +34,7 @@ public class FactionController {
         }
 
         // Create the new faction
-        PlayerData playerData = plugin.playerController.getPlayer(player);
+        PlayerData playerData = dataManager.getPlayerData(player);
         FactionData factionData = new FactionData(playerData);
         factionData.name = factionName;
         dataManager.addFactionData(factionData);
@@ -43,15 +43,15 @@ public class FactionController {
         return true;
     }
 
-    public boolean invite(Player inviter, Player invitee) {
+    public boolean inviteToFaction(Player inviter, Player invitee) {
         if (!isPlayerInFaction(inviter)) {
             inviter.sendMessage("You must be in a faction...");
             return true;
         }
 
         FactionData factionData = getFactionForPlayer(inviter);
-        PlayerData inviterData = plugin.playerController.getPlayer(inviter);
-        PlayerData inviteeData = plugin.playerController.getPlayer(invitee);
+        PlayerData inviterData = dataManager.getPlayerData(inviter);
+        PlayerData inviteeData = dataManager.getPlayerData(invitee);
 
         if (factionData == null || inviterData == null || inviteeData == null) {
             return false;
@@ -71,7 +71,7 @@ public class FactionController {
     }
 
     public boolean joinFaction(String factionName, Player player) {
-        PlayerData playerData = plugin.playerController.getPlayer(player);
+        PlayerData playerData = dataManager.getPlayerData(player);
 
         Invite invite = null;
         for (Invite i : dataManager.invites) {
@@ -123,7 +123,7 @@ public class FactionController {
         }
 
         FactionData factionData = getFactionForPlayer(player);
-        PlayerData playerData = plugin.playerController.getPlayer(player);
+        PlayerData playerData = dataManager.getPlayerData(player);
 
         // Remove player from faction
         factionData.players.remove(playerData);
@@ -218,6 +218,28 @@ public class FactionController {
         return true;
     }
 
+    public boolean isChunkOwnedByFaction(ChunkData chunkData) {
+        for (FactionData factionData : dataManager.factions.values()) {
+            for (ChunkData ownedChunkData : factionData.ownedChunks) {
+                if (ownedChunkData.equals(chunkData)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public FactionData getChunkOwner(ChunkData chunkData) {
+        for (FactionData factionData : dataManager.factions.values()) {
+            for (ChunkData ownedChunkData : factionData.ownedChunks) {
+                if (ownedChunkData.equals(chunkData)) {
+                    return factionData;
+                }
+            }
+        }
+        return null;
+    }
+
     public boolean isPlayerInFaction(Player player) {
         return getFactionForPlayer(player) != null;
     }
@@ -258,28 +280,6 @@ public class FactionController {
 
             }
         }
-    }
-
-    public boolean isChunkOwnedByFaction(ChunkData chunkData) {
-        for (FactionData factionData : dataManager.factions.values()) {
-            for (ChunkData ownedChunkData : factionData.ownedChunks) {
-                if (ownedChunkData.equals(chunkData)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public FactionData getChunkOwner(ChunkData chunkData) {
-        for (FactionData factionData : dataManager.factions.values()) {
-            for (ChunkData ownedChunkData : factionData.ownedChunks) {
-                if (ownedChunkData.equals(chunkData)) {
-                    return factionData;
-                }
-            }
-        }
-        return null;
     }
 
 }

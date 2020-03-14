@@ -36,7 +36,7 @@ public class RFCommand implements CommandExecutor {
             case "invite":
                 if (args.length > 1) {
                     String playerName = args[1];
-                    return invitePlayer(playerName, player);
+                    return inviteToFaction(playerName, player);
                 }
                 break;
             case "join":
@@ -72,13 +72,13 @@ public class RFCommand implements CommandExecutor {
         return plugin.factionController.leaveFaction(player);
     }
 
-    private boolean invitePlayer(String playerName, Player player) {
-        Player invitee = Bukkit.getPlayer(playerName);
+    private boolean inviteToFaction(String inviteeName, Player inviter) {
+        Player invitee = Bukkit.getPlayer(inviteeName);
         if (invitee == null) {
-            player.sendMessage("Failed to find player " + playerName);
+            inviter.sendMessage("Failed to find player " + inviteeName);
             return true;
         }
-        return plugin.factionController.invite(player, invitee);
+        return plugin.factionController.inviteToFaction(inviter, invitee);
     }
 
     private boolean status(Player player) {

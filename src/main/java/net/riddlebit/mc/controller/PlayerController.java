@@ -26,8 +26,4 @@ public class PlayerController {
         return playerData;
     }
 
-    public PlayerData getPlayer(Player player) {
-        return dataManager.getPlayerData(player);
-    }
-
 }
