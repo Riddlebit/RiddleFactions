@@ -8,10 +8,12 @@ import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PlayerController {
@@ -127,6 +129,43 @@ public class PlayerController {
                     break;
                 case WILDERNESS:
                     player.sendMessage("Entering wilderness");
+            }
+        }
+    }
+
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+
+        Chunk chunk = block.getChunk();
+        Player player = event.getPlayer();
+
+        FactionData factionData = plugin.factionController.getFactionForPlayer(player);
+        ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
+        FactionData chunkFactionData = plugin.factionController.getChunkOwner(chunkData);
+
+        if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
+            // Player is not in this faction -> cancel block break
+            switch (block.getType()) {
+                case OAK_DOOR:
+                case BIRCH_DOOR:
+                case ACACIA_DOOR:
+                case JUNGLE_DOOR:
+                case SPRUCE_DOOR:
+                case DARK_OAK_DOOR:
+                case OAK_TRAPDOOR:
+                case BIRCH_TRAPDOOR:
+                case ACACIA_TRAPDOOR:
+                case JUNGLE_TRAPDOOR:
+                case SPRUCE_TRAPDOOR:
+                case DARK_OAK_TRAPDOOR:
+                case OAK_FENCE_GATE:
+                case BIRCH_FENCE_GATE:
+                case ACACIA_FENCE_GATE:
+                case JUNGLE_FENCE_GATE:
+                case SPRUCE_FENCE_GATE:
+                case DARK_OAK_FENCE_GATE:
+                    event.setCancelled(true);
             }
         }
     }
