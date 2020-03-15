@@ -8,6 +8,7 @@ import net.riddlebit.mc.commands.TestCommand;
 import net.riddlebit.mc.controller.DataManager;
 import net.riddlebit.mc.controller.FactionController;
 import net.riddlebit.mc.controller.PlayerController;
+import net.riddlebit.mc.controller.TreasureController;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
@@ -21,6 +22,7 @@ public class RiddleFactions extends JavaPlugin {
     public DataManager dataManager;
     public PlayerController playerController;
     public FactionController factionController;
+    public TreasureController treasureController;
 
     @Override
     public void onEnable() {
@@ -44,6 +46,7 @@ public class RiddleFactions extends JavaPlugin {
         // Controllers
         playerController = new PlayerController(this);
         factionController = new FactionController(this);
+        treasureController = new TreasureController(this);
 
         // Schedule reputation updating
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.updateReputation(), 20, 20);

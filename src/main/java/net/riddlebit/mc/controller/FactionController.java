@@ -7,7 +7,6 @@ import net.riddlebit.mc.data.Invite;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -152,7 +151,7 @@ public class FactionController {
             return true;
         }
 
-        if (player.getWorld().getEnvironment() != World.Environment.NORMAL) {
+        if (player.getWorld() != Bukkit.getWorlds().get(0)) {
             player.sendMessage("You cannot claim a chunk here...");
             return true;
         }

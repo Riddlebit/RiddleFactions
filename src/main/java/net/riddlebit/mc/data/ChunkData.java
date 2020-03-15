@@ -3,7 +3,6 @@ package net.riddlebit.mc.data;
 import java.util.Objects;
 
 public class ChunkData {
-
     public ChunkData() {}
 
     public ChunkData(int x, int z) {

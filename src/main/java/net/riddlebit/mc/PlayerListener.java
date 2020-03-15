@@ -3,6 +3,8 @@ package net.riddlebit.mc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerListener implements Listener {
@@ -17,6 +19,16 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         plugin.playerController.addPlayer(player);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        plugin.playerController.onPlayerPlaceBlock(event);
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        plugin.playerController.onPlayerBreakBlock(event);
     }
 
 }
