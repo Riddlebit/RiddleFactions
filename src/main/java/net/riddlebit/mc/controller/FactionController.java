@@ -261,20 +261,22 @@ public class FactionController {
         return players;
     }
 
+    public float getReputationRateForFaction(FactionData factionData) {
+        float reputationRate = 100f;
+        for (TreasureData treasureData : plugin.treasureController.getAllTreasuresInFaction(factionData)) {
+            reputationRate += plugin.treasureController.getTreasureReputation(treasureData);
+        }
+        return reputationRate;
+    }
+
     public void updateReputation() {
         for (FactionData factionData : dataManager.factions.values()) {
 
             int playerCount = getOnlinePlayersInFaction(factionData).size();
 
             if (playerCount > 0) {
-                float reputationRate = 100f;
-
-                for (TreasureData treasureData : plugin.treasureController.getAllTreasuresInFaction(factionData)) {
-                    reputationRate += plugin.treasureController.getTreasureReputation(treasureData);
-                }
-
+                float reputationRate = getReputationRateForFaction(factionData);
                 float reputationPerPlayer = reputationRate / playerCount / 3600;
-
                 for (PlayerData playerData : factionData.players) {
                     playerData.reputation += reputationPerPlayer;
                 }

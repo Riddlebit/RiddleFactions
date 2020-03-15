@@ -89,10 +89,14 @@ public class RFCommand implements CommandExecutor {
         }
 
         PlayerData playerData = plugin.dataManager.getPlayerData(player);
+        int onlinePlayersInFaction = plugin.factionController.getOnlinePlayersInFaction(factionData).size();
+        float factionReputationRate = plugin.factionController.getReputationRateForFaction(factionData);
+        float playerReputationRate = factionReputationRate / onlinePlayersInFaction;
 
         String status = "";
         status = "Faction: " + factionData.name + "\n";
         status += "Reputation: " + (int) playerData.reputation + " / " + (int) factionData.getReputation();
+        status += " (" + (int) playerReputationRate + " / " + (int) factionReputationRate + " per hour)";
 
         player.sendMessage(status);
         return true;
