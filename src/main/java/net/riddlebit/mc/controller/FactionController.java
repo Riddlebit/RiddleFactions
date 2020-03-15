@@ -1,10 +1,7 @@
 package net.riddlebit.mc.controller;
 
 import net.riddlebit.mc.RiddleFactions;
-import net.riddlebit.mc.data.ChunkData;
-import net.riddlebit.mc.data.FactionData;
-import net.riddlebit.mc.data.Invite;
-import net.riddlebit.mc.data.PlayerData;
+import net.riddlebit.mc.data.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
@@ -270,11 +267,16 @@ public class FactionController {
             int playerCount = getOnlinePlayersInFaction(factionData).size();
 
             if (playerCount > 0) {
+                float reputationRate = 100f;
 
-                float reputationGain = 100f / playerCount / 3600;
+                for (TreasureData treasureData : plugin.treasureController.getAllTreasuresInFaction(factionData)) {
+                    reputationRate += plugin.treasureController.getTreasureReputation(treasureData);
+                }
+
+                float reputationPerPlayer = reputationRate / playerCount / 3600;
 
                 for (PlayerData playerData : factionData.players) {
-                    playerData.reputation += reputationGain;
+                    playerData.reputation += reputationPerPlayer;
                 }
 
             }

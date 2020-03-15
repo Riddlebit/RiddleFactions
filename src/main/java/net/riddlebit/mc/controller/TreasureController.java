@@ -1,11 +1,17 @@
 package net.riddlebit.mc.controller;
 
 import net.riddlebit.mc.RiddleFactions;
+import net.riddlebit.mc.data.ChunkData;
+import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.TreasureData;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TreasureController {
@@ -51,6 +57,33 @@ public class TreasureController {
         }
         String blockType = block.getType().toString();
         return new TreasureData(blockType, block.getX(), block.getY(), block.getZ());
+    }
+
+    public boolean isTreasureOwnedByFaction(TreasureData treasureData, FactionData factionData) {
+        List<ChunkData> ownedChunks = factionData.ownedChunks;
+        for (ChunkData chunkData : ownedChunks) {
+            // Is treasure within this chunk?
+            if (treasureData.x >> 4 == chunkData.x && treasureData.z >> 4 == chunkData.z) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public List<TreasureData> getAllTreasuresInFaction(FactionData factionData) {
+        List<TreasureData> treasures = new ArrayList<>();
+        for (TreasureData treasureData : dataManager.treasures) {
+            // Is this treasure owned by this faction?
+            if (isTreasureOwnedByFaction(treasureData, factionData)) {
+                treasures.add(treasureData);
+            }
+        }
+        return treasures;
+    }
+
+    public int getTreasureReputation(TreasureData treasureData) {
+        Material material = Material.valueOf(treasureData.blockType);
+        return treasureMap.getOrDefault(material, 0);
     }
 
 }
