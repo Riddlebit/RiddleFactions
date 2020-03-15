@@ -1,14 +1,10 @@
 package net.riddlebit.mc.data;
 
-import dev.morphia.annotations.Embedded;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity(value = "treasures", noClassnameStored = true)
 public class TreasureData {

@@ -4,8 +4,6 @@ import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.ChunkData;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.TreasureData;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 

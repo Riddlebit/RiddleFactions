@@ -42,7 +42,7 @@ public class PlayerController {
         ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
         FactionData chunkFactionData = plugin.factionController.getChunkOwner(chunkData);
 
-        if (factionData == null || (chunkFactionData != null && !factionData.equals(chunkFactionData))) {
+        if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
             // Player is not in this faction -> cancel block placement
             event.setCancelled(true);
         } else {
@@ -64,7 +64,7 @@ public class PlayerController {
         ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
         FactionData chunkFactionData = plugin.factionController.getChunkOwner(chunkData);
 
-        if (factionData == null || (chunkFactionData != null && !factionData.equals(chunkFactionData))) {
+        if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
             // Player is not in this faction -> cancel block break
             event.setCancelled(true);
         } else {

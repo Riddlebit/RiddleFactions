@@ -178,6 +178,11 @@ public class FactionController {
         }
 
         // Check reputation
+        int ownedChunksCount = factionData.ownedChunks.size();
+        if (!factionData.canAffordChunkCount(ownedChunksCount+1)) {
+            player.sendMessage("Your faction does not have enough reputation...");
+            return true;
+        }
 
         factionData.ownedChunks.add(chunkData);
         dataManager.save();
@@ -203,8 +208,15 @@ public class FactionController {
         }
 
         if (!factionChunkData.equals(factionData)) {
-            player.sendMessage("No, you cannot do that");
-            return true;
+            int currentChunkCount = factionChunkData.ownedChunks.size();
+            if (factionChunkData.canAffordChunkCount(currentChunkCount)) {
+                player.sendMessage("No, you cannot do that");
+                return true;
+            }
+            if (!factionChunkData.canChunkBeCleared(chunkData)) {
+                player.sendMessage("This chunk does not border wilderness...");
+                return true;
+            }
         }
 
         factionData.ownedChunks.remove(chunkData);

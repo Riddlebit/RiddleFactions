@@ -49,6 +49,28 @@ public class FactionData {
         return ownedChunks.contains(chunkData);
     }
 
+    public boolean canChunkBeCleared(ChunkData chunkData) {
+        List<ChunkData> chunksToTest = new ArrayList<>();
+        chunksToTest.add(new ChunkData(chunkData.x-1, chunkData.z));
+        chunksToTest.add(new ChunkData(chunkData.x+1, chunkData.z));
+        chunksToTest.add(new ChunkData(chunkData.x, chunkData.z-1));
+        chunksToTest.add(new ChunkData(chunkData.x, chunkData.z+1));
+        for (ChunkData chunkToTest : chunksToTest) {
+            if (!isChunkOwnedByFaction(chunkToTest)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canAffordChunkCount(int chunkCount) {
+        float cost = 100f * chunkCount;
+        if (chunkCount > 9) {
+            cost += 10f * Math.floor((((chunkCount - 9) * (chunkCount - 8)) / 2f));
+        }
+        return cost <= getReputation();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
