@@ -219,7 +219,7 @@ public class FactionController {
             }
         }
 
-        factionData.ownedChunks.remove(chunkData);
+        factionChunkData.ownedChunks.remove(chunkData);
         dataManager.save();
 
         player.sendMessage("Chunk cleared");

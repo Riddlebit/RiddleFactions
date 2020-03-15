@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class PlayerController {
 
@@ -73,6 +74,24 @@ public class PlayerController {
                     player.sendMessage("Treasure removed!");
                 }
             }
+        }
+    }
+
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        PlayerData playerData = dataManager.getPlayerData(player);
+
+        float reputation = playerData.reputation;
+        playerData.reputation = reputation * 0.5f;
+        float lostReputation = reputation - playerData.reputation;
+        player.sendMessage("You lost " + (int) lostReputation + " reputation...");
+
+        Player killer = player.getKiller();
+        if (killer != null) {
+            PlayerData killerPlayerData = dataManager.getPlayerData(killer);
+            float gainedReputation = lostReputation * 0.5f;
+            killerPlayerData.reputation += gainedReputation;
+            killer.sendMessage("You gained " + (int) gainedReputation + " reputation!");
         }
     }
 
