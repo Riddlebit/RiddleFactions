@@ -53,6 +53,16 @@ public class RFCommand implements CommandExecutor {
                 return claimChunk(player);
             case "clear":
                 return clearChunk(player);
+            case "give":
+                if (args.length > 1) {
+                    try {
+                        float reputation = Float.parseFloat(args[1]);
+                        giveReputation(player, reputation);
+                    } catch (Exception e) {
+                        plugin.getLogger().severe(e.getMessage());
+                    }
+                    return true;
+                }
         }
 
         return false;
@@ -108,6 +118,15 @@ public class RFCommand implements CommandExecutor {
 
     private boolean clearChunk(Player player) {
         return plugin.factionController.clearChunk(player);
+    }
+
+    private void giveReputation(Player player, float reputation) {
+        if (player.isOp()) {
+            PlayerData playerData = plugin.dataManager.getPlayerData(player);
+            playerData.reputation += reputation;
+        } else {
+            player.sendMessage("You're not an operator...");
+        }
     }
 
 }
