@@ -4,6 +4,7 @@ import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -49,6 +50,8 @@ public class RFCommand implements CommandExecutor {
                 return leaveFaction(player);
             case "status":
                 return status(player);
+            case "list":
+                return list(player);
             case "claim":
                 return claimChunk(player);
             case "clear":
@@ -109,6 +112,19 @@ public class RFCommand implements CommandExecutor {
         status += " (" + (int) playerReputationRate + " / " + (int) factionReputationRate + " per hour)";
 
         player.sendMessage(status);
+        return true;
+    }
+
+    private boolean list(Player player) {
+        String message = ChatColor.BOLD + "---- Faction List ----" + "\n" + ChatColor.RESET;
+        for (FactionData factionData : plugin.dataManager.factions.values()) {
+            int chunkCount = factionData.ownedChunks.size();
+            boolean canAfford = factionData.canAffordChunkCount(chunkCount);
+            message += canAfford ? ChatColor.GREEN : ChatColor.RED;
+            message += factionData.name + " - " + (int) factionData.getReputation() + "\n";
+        }
+        message += ChatColor.BOLD + "----------------------";
+        player.sendMessage(message);
         return true;
     }
 
