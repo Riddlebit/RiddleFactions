@@ -197,6 +197,11 @@ public class FactionController {
             return true;
         }
 
+        if (player.getWorld() != Bukkit.getWorlds().get(0)) {
+            player.sendMessage("You cannot clear chunks here...");
+            return true;
+        }
+
         Chunk chunk = player.getLocation().getChunk();
         ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
         FactionData factionData = getFactionForPlayer(player);
@@ -248,6 +253,33 @@ public class FactionController {
         return null;
     }
 
+    public boolean isChunkBorder(ChunkData chunkData) {
+        if (isChunkOwnedByFaction(chunkData)) return false;
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
+                int currentX = chunkData.x + x;
+                int currentZ = chunkData.z + z;
+                ChunkData currentChunkData = new ChunkData(currentX, currentZ);
+                if (isChunkOwnedByFaction(currentChunkData)) return true;
+            }
+        }
+        return false;
+    }
+
+    public FactionData chunkBordersToFaction(ChunkData chunkData) {
+        if (!isChunkBorder(chunkData)) return null;
+        for (int x = -1; x < 2; x++) {
+            for (int z = -1; z < 2; z++) {
+                int currentX = chunkData.x + x;
+                int currentZ = chunkData.z + z;
+                ChunkData currentChunkData = new ChunkData(currentX, currentZ);
+                FactionData factionData = getChunkOwner(currentChunkData);
+                if (factionData != null) return factionData;
+            }
+        }
+        return null;
+    }
+
     public boolean isPlayerInFaction(Player player) {
         return getFactionForPlayer(player) != null;
     }
@@ -279,6 +311,12 @@ public class FactionController {
             reputationRate += plugin.treasureController.getTreasureReputation(treasureData);
         }
         return reputationRate;
+    }
+
+    public ChunkType getChunkType(ChunkData chunkData) {
+        if (isChunkOwnedByFaction(chunkData)) return ChunkType.CLAIMED;
+        if (isChunkBorder(chunkData)) return ChunkType.BORDER;
+        return ChunkType.WILDERNESS;
     }
 
     public void updateReputation() {
