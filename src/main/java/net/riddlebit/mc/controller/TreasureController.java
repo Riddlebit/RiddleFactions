@@ -26,6 +26,7 @@ public class TreasureController {
         treasureMap.put(Material.DIAMOND_BLOCK, 5);
         treasureMap.put(Material.EMERALD_BLOCK, 5);
         treasureMap.put(Material.LAPIS_BLOCK, 3);
+        treasureMap.put(Material.DRAGON_EGG, 30);
     }
 
     public boolean addTreasure(Block block) {
