@@ -305,6 +305,16 @@ public class FactionController {
         return players;
     }
 
+    public List<Player> getAlivePlayersInFaction(FactionData factionData) {
+        List<Player> alivePlayers = new ArrayList<>();
+        for (Player player : getOnlinePlayersInFaction(factionData)) {
+            if (!player.isDead()) {
+                alivePlayers.add(player);
+            }
+        }
+        return alivePlayers;
+    }
+
     public float getReputationRateForFaction(FactionData factionData) {
         float reputationRate = 100f;
         for (TreasureData treasureData : plugin.treasureController.getAllTreasuresInFaction(factionData)) {
@@ -322,15 +332,16 @@ public class FactionController {
     public void updateReputation() {
         for (FactionData factionData : dataManager.factions.values()) {
 
-            int playerCount = getOnlinePlayersInFaction(factionData).size();
+            int playerCount = getAlivePlayersInFaction(factionData).size();
 
             if (playerCount > 0) {
                 float reputationRate = getReputationRateForFaction(factionData);
                 float reputationPerPlayer = reputationRate / playerCount / 3600;
                 for (PlayerData playerData : factionData.players) {
-                    playerData.reputation += reputationPerPlayer;
+                    if (!playerData.isDead()) {
+                        playerData.reputation += reputationPerPlayer;
+                    }
                 }
-
             }
         }
     }
