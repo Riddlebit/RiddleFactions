@@ -11,11 +11,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlayerListener implements Listener {
+public class RFEventListener implements Listener {
 
     private RiddleFactions plugin;
 
-    public PlayerListener(RiddleFactions plugin) {
+    public RFEventListener(RiddleFactions plugin) {
         this.plugin = plugin;
     }
 

@@ -41,7 +41,7 @@ public class RiddleFactions extends JavaPlugin {
         this.getCommand("rf").setExecutor(new RFCommand(this));
 
         // Register listeners
-        getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
+        getServer().getPluginManager().registerEvents(new RFEventListener(this), this);
 
         // Controllers
         playerController = new PlayerController(this);
