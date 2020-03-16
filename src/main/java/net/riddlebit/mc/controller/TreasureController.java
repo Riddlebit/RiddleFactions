@@ -8,10 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TreasureController {
 
@@ -85,6 +82,10 @@ public class TreasureController {
     public int getTreasureReputation(TreasureData treasureData) {
         Material material = Material.valueOf(treasureData.blockType);
         return treasureMap.getOrDefault(material, 0);
+    }
+
+    public Set<Material> getAllTreasureMaterials() {
+        return treasureMap.keySet();
     }
 
 }

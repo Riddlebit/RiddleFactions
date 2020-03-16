@@ -7,8 +7,8 @@ import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -71,14 +71,16 @@ public class PlayerController {
 
         if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
             // Player is not in this faction -> cancel block break
-            event.setCancelled(true);
-        } else {
-            if (player.getWorld() == Bukkit.getWorlds().get(0)) {
-                if (plugin.treasureController.removeTreasure(block)) {
-                    player.sendMessage("Treasure removed!");
+            boolean cancelEvent = true;
+            for (Material material : plugin.treasureController.getAllTreasureMaterials()) {
+                // Intruders can break treasures!
+                if (block.getType().equals(material)) {
+                    cancelEvent = false;
                 }
             }
+            event.setCancelled(cancelEvent);
         }
+        plugin.treasureController.removeTreasure(block);
     }
 
     public void onPlayerDeath(PlayerDeathEvent event) {
