@@ -6,13 +6,15 @@ import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class RFCommand implements CommandExecutor {
+public class RFCommand implements TabExecutor {
 
     private RiddleFactions plugin;
 
@@ -69,6 +71,37 @@ public class RFCommand implements CommandExecutor {
         }
 
         return false;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] args) {
+        List<String> returnList = new ArrayList<>();
+        if (args.length == 0) {
+            returnList.add("status");
+            returnList.add("list");
+            returnList.add("create");
+            returnList.add("invite");
+            returnList.add("join");
+            returnList.add("leave");
+            returnList.add("claim");
+            returnList.add("clear");
+        } else if (args.length == 1) {
+            switch (args[0].toLowerCase()) {
+                case "create":
+                case "join":
+                    for (FactionData factionData : plugin.dataManager.factions.values()) {
+                        returnList.add(factionData.name);
+                    }
+                    break;
+                case "invite":
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        returnList.add(player.getDisplayName());
+                    }
+                    break;
+
+            }
+        }
+        return returnList;
     }
 
     private boolean createFaction(String factionName, Player player) {
@@ -145,5 +178,4 @@ public class RFCommand implements CommandExecutor {
             player.sendMessage("You're not an operator...");
         }
     }
-
 }
