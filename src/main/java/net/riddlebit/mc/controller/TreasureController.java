@@ -4,6 +4,7 @@ import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.ChunkData;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.TreasureData;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
@@ -26,7 +27,7 @@ public class TreasureController {
         treasureMap.put(Material.DIAMOND_BLOCK, 5);
         treasureMap.put(Material.EMERALD_BLOCK, 5);
         treasureMap.put(Material.LAPIS_BLOCK, 3);
-        treasureMap.put(Material.DRAGON_EGG, 30);
+        //treasureMap.put(Material.DRAGON_EGG, 30);
     }
 
     public boolean addTreasure(Block block) {
@@ -39,6 +40,7 @@ public class TreasureController {
     }
 
     public boolean removeTreasure(Block block) {
+        if (block.getWorld() != Bukkit.getWorlds().get(0)) return false;
         TreasureData treasureData = getTreasureDataFromBlock(block);
         if (treasureData != null) {
             dataManager.removeTreasureData(treasureData);

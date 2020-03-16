@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -47,6 +48,11 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         plugin.playerController.onPlayerInteract(event);
+    }
+
+    @EventHandler
+    public void onBlockExplodeEvent(BlockExplodeEvent event) {
+        plugin.treasureController.removeTreasure(event.getBlock());
     }
 
 }

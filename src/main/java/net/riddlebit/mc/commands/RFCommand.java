@@ -123,7 +123,8 @@ public class RFCommand implements CommandExecutor {
             message += canAfford ? ChatColor.GREEN : ChatColor.RED;
             message += factionData.name + " - " + (int) factionData.getReputation() + "\n";
         }
-        message += ChatColor.BOLD + "----------------------";
+        message += ChatColor.RESET;
+        message += ChatColor.BOLD + "--------------------";
         player.sendMessage(message);
         return true;
     }
