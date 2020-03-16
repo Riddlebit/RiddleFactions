@@ -2,11 +2,18 @@ package net.riddlebit.mc.data;
 
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(value = "players", noClassnameStored = true)
 public class PlayerData {
+
+    public PlayerData() {
+        id = new ObjectId();
+    }
 
     @Id
     private ObjectId id;
@@ -16,6 +23,11 @@ public class PlayerData {
     public String name;
 
     public float reputation;
+
+    public boolean isDead() {
+        Player player = Bukkit.getPlayer(UUID.fromString(uuid));
+        return player == null || player.isDead();
+    }
 
     @Override
     public boolean equals(Object o) {

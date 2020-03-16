@@ -1,11 +1,9 @@
 name: net.riddlebit.mc.RiddleFactions
 version: 0.1
 main: net.riddlebit.mc.RiddleFactions
+api-version: 1.15
 
 commands:
-  test:
-    description: Just a test command
-    usage: /test
   rf:
     description: RiddleFactions command
-    usage: /rf [options]
+    usage: /rf <action> <args>
