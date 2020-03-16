@@ -76,7 +76,7 @@ public class RFCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] args) {
         List<String> returnList = new ArrayList<>();
-        if (args.length == 0) {
+        if (args.length == 1) {
             returnList.add("status");
             returnList.add("list");
             returnList.add("create");
@@ -85,9 +85,8 @@ public class RFCommand implements TabExecutor {
             returnList.add("leave");
             returnList.add("claim");
             returnList.add("clear");
-        } else if (args.length == 1) {
+        } else if (args.length > 1) {
             switch (args[0].toLowerCase()) {
-                case "create":
                 case "join":
                     for (FactionData factionData : plugin.dataManager.factions.values()) {
                         returnList.add(factionData.name);
