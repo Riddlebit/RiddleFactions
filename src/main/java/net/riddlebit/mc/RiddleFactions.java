@@ -4,7 +4,6 @@ import com.mongodb.MongoClient;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import net.riddlebit.mc.commands.RFCommand;
-import net.riddlebit.mc.commands.TestCommand;
 import net.riddlebit.mc.controller.DataManager;
 import net.riddlebit.mc.controller.FactionController;
 import net.riddlebit.mc.controller.PlayerController;
@@ -37,7 +36,6 @@ public class RiddleFactions extends JavaPlugin {
         dataManager = new DataManager(this);
 
         // Register commands
-        this.getCommand("test").setExecutor(new TestCommand());
         this.getCommand("rf").setExecutor(new RFCommand(this));
 
         // Register listeners
