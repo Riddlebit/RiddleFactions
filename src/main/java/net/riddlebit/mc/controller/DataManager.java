@@ -1,5 +1,8 @@
 package net.riddlebit.mc.controller;
 
+import com.mongodb.MongoClient;
+import dev.morphia.Datastore;
+import dev.morphia.Morphia;
 import dev.morphia.query.Query;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.*;
@@ -16,12 +19,21 @@ public class DataManager {
     public Set<TreasureData> treasures;
     public Set<Invite> invites;
 
+    private Datastore datastore;
+
     public DataManager(RiddleFactions plugin) {
         this.plugin = plugin;
         players = new HashMap<>();
         factions = new HashMap<>();
         treasures = new HashSet<>();
         invites = new HashSet<>();
+
+        // Database stuff
+        Morphia morphia = new Morphia();
+        morphia.map(PlayerData.class);
+        morphia.map(FactionData.class);
+        datastore = morphia.createDatastore(new MongoClient(), "riddleFactions");
+        datastore.ensureIndexes();
 
         // Load from database
         loadPlayers();
@@ -35,31 +47,31 @@ public class DataManager {
 
     public void addPlayerData(PlayerData playerData) {
         players.put(playerData.uuid, playerData);
-        plugin.datastore.save(playerData);
+        datastore.save(playerData);
     }
 
     public void addFactionData(FactionData factionData) {
         factions.put(factionData.name, factionData);
-        plugin.datastore.save(factionData);
+        datastore.save(factionData);
     }
 
     public void deleteFaction(FactionData factionData) {
         factions.remove(factionData.name);
-        plugin.datastore.delete(factionData);
+        datastore.delete(factionData);
     }
 
     public void addTreasureData(TreasureData treasureData) {
         treasures.add(treasureData);
-        plugin.datastore.save(treasureData);
+        datastore.save(treasureData);
     }
 
     public void removeTreasureData(TreasureData treasureData) {
         treasures.remove(treasureData);
-        plugin.datastore.delete(treasureData);
+        datastore.delete(treasureData);
     }
 
     private void loadPlayers() {
-        Query<PlayerData> query = plugin.datastore.createQuery(PlayerData.class);
+        Query<PlayerData> query = datastore.createQuery(PlayerData.class);
         List<PlayerData> loadedPlayers = query.find().toList();
         if (loadedPlayers.size() > 0) {
             for (PlayerData playerData : loadedPlayers) {
@@ -69,7 +81,7 @@ public class DataManager {
     }
 
     private void loadFactions() {
-        Query<FactionData> query = plugin.datastore.createQuery(FactionData.class);
+        Query<FactionData> query = datastore.createQuery(FactionData.class);
         List<FactionData> loadedFactions = query.find().toList();
         if (loadedFactions.size() > 0) {
             for (FactionData factionData : loadedFactions) {
@@ -82,7 +94,7 @@ public class DataManager {
     }
 
     private void loadTreasures() {
-        Query<TreasureData> query = plugin.datastore.createQuery(TreasureData.class);
+        Query<TreasureData> query = datastore.createQuery(TreasureData.class);
         List<TreasureData> loadedTreasures = query.find().toList();
         for (TreasureData treasureData : loadedTreasures) {
             treasures.add(treasureData);
@@ -92,13 +104,13 @@ public class DataManager {
     public void save() {
         plugin.getLogger().info("Saving to database");
         for (FactionData factionData : factions.values()) {
-            plugin.datastore.save(factionData);
+            datastore.save(factionData);
         }
         for (PlayerData playerData : players.values()) {
-            plugin.datastore.save(playerData);
+            datastore.save(playerData);
         }
         for (TreasureData treasureData : treasures) {
-            plugin.datastore.save(treasureData);
+            datastore.save(treasureData);
         }
     }
 
