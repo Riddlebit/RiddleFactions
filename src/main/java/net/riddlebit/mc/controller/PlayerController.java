@@ -6,6 +6,7 @@ import net.riddlebit.mc.data.ChunkType;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -99,6 +100,12 @@ public class PlayerController {
             killerPlayerData.reputation += gainedReputation;
             killer.sendMessage("You gained " + (int) gainedReputation + " reputation!");
         }
+
+        // Set death message
+        String deathMessage = ChatColor.RED + "-> ";
+        deathMessage += ChatColor.GRAY + event.getDeathMessage();
+        deathMessage += " and lost " + ChatColor.RED + (int) lostReputation + ChatColor.GRAY + " reputation...";
+        event.setDeathMessage(deathMessage);
     }
 
     public void onPlayerMove(PlayerMoveEvent event) {
