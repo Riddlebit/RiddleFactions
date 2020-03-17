@@ -32,7 +32,9 @@ public class DataManager {
         Morphia morphia = new Morphia();
         morphia.map(PlayerData.class);
         morphia.map(FactionData.class);
-        datastore = morphia.createDatastore(new MongoClient(), "riddleFactions");
+
+        String dbName = plugin.getConfig().getString("dbName");
+        datastore = morphia.createDatastore(new MongoClient(), dbName);
         datastore.ensureIndexes();
 
         // Load from database
