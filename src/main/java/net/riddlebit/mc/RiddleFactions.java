@@ -42,7 +42,8 @@ public class RiddleFactions extends JavaPlugin {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> factionController.updateReputation(), 20, 20);
 
         // Schedule database saving
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> dataManager.save(), 12000, 12000);
+        int saveFrequency = config.getInt("db-save-frequency");
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> dataManager.save(), saveFrequency, saveFrequency);
     }
 
     @Override
