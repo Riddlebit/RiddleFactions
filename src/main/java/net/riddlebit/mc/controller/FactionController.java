@@ -13,9 +13,12 @@ public class FactionController {
     private RiddleFactions plugin;
     private DataManager dataManager;
 
+    private float reputationBaseRate;
+
     public FactionController(RiddleFactions plugin) {
         this.plugin = plugin;
         dataManager = plugin.dataManager;
+        reputationBaseRate = (float) plugin.config.getDouble("reputation-base-rate");
     }
 
     public boolean createFaction(String factionName, Player player) {
@@ -316,7 +319,7 @@ public class FactionController {
     }
 
     public float getReputationRateForFaction(FactionData factionData) {
-        float reputationRate = 100f;
+        float reputationRate = reputationBaseRate;
         for (TreasureData treasureData : plugin.treasureController.getAllTreasuresInFaction(factionData)) {
             reputationRate += plugin.treasureController.getTreasureReputation(treasureData);
         }

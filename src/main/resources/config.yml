@@ -1,1 +1,3 @@
-dbName: riddleFactions
+reputation-base-rate: 100
+db-name: riddleFactions
+db-save-frequency: 18000
