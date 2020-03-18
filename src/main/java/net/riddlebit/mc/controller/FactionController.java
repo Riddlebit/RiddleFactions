@@ -1,5 +1,6 @@
 package net.riddlebit.mc.controller;
 
+import net.riddlebit.mc.RFChat;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.*;
 import org.bukkit.Bukkit;
@@ -23,12 +24,12 @@ public class FactionController {
 
     public boolean createFaction(String factionName, Player player) {
         if (isPlayerInFaction(player)) {
-            player.sendMessage("You're already in a faction...");
+            RFChat.toPlayer(player, "You're already in a faction...");
             return true;
         }
 
         if (dataManager.factions.containsKey(factionName)) {
-            player.sendMessage("A faction with that name already exists");
+            RFChat.toPlayer(player, "A faction with that name already exists...");
             return true;
         }
 
@@ -38,13 +39,13 @@ public class FactionController {
         factionData.name = factionName;
         dataManager.addFactionData(factionData);
 
-        player.sendMessage(factionName + " was created!");
+        RFChat.toPlayer(player, factionName + " was created!");
         return true;
     }
 
     public boolean inviteToFaction(Player inviter, Player invitee) {
         if (!isPlayerInFaction(inviter)) {
-            inviter.sendMessage("You must be in a faction...");
+            RFChat.toPlayer(inviter, "You must be in a faction...");
             return true;
         }
 
@@ -57,15 +58,15 @@ public class FactionController {
         }
 
         if (inviterData.equals(inviteeData)) {
-            inviter.sendMessage("You cannot invite yourself...");
+            RFChat.toPlayer(inviter, "You cannot invite yourself...");
             return true;
         }
 
         Invite invite = new Invite(factionData, inviterData, inviteeData);
         dataManager.invites.add(invite);
 
-        inviter.sendMessage(invitee.getDisplayName() + " was invited to your faction");
-        invitee.sendMessage("You have been invited to " + factionData.name);
+        RFChat.toPlayer(inviter, invitee.getDisplayName() + " was invited to your faction");
+        RFChat.toPlayer(invitee, "You have been invited to " + factionData.name);
         return true;
     }
 
@@ -80,7 +81,7 @@ public class FactionController {
         }
 
         if (invite == null) {
-            player.sendMessage("No invite found :(");
+            RFChat.toPlayer(player, "No invite found :(");
             return true;
         }
 
@@ -106,10 +107,10 @@ public class FactionController {
         factionData.players.add(playerData);
         dataManager.save();
 
-        player.sendMessage("You have joined " + factionData.name);
+        RFChat.toPlayer(player, "You have joined " + factionData.name);
         for (Player factionPlayer : getOnlinePlayersInFaction(factionData)) {
             if (factionPlayer != player) {
-                factionPlayer.sendMessage(player.getDisplayName() + " has joined your faction!");
+                RFChat.toPlayer(factionPlayer, player.getDisplayName() + " has joined your faction!");
             }
         }
         return true;
@@ -117,7 +118,7 @@ public class FactionController {
 
     public boolean leaveFaction(Player player) {
         if (!isPlayerInFaction(player)) {
-            player.sendMessage("You're not in a faction...");
+            RFChat.toPlayer(player, "You're not in a faction...");
             return true;
         }
 
@@ -129,7 +130,7 @@ public class FactionController {
         if (factionData.players.size() > 0) {
             // Broadcast to other faction members
             for (Player factionPlayer : getOnlinePlayersInFaction(factionData)) {
-                factionPlayer.sendMessage(player.getDisplayName() + " left your faction!");
+                RFChat.toPlayer(factionPlayer, player.getDisplayName() + " left your faction!");
             }
             dataManager.save();
         } else {
@@ -141,18 +142,18 @@ public class FactionController {
         playerData.reputation = 0;
         dataManager.save();
 
-        player.sendMessage("You left " + factionData.name);
+        RFChat.toPlayer(player, "You left " + factionData.name);
         return true;
     }
 
     public boolean claimChunk(Player player) {
         if (!isPlayerInFaction(player)) {
-            player.sendMessage("You're not in a faction...");
+            RFChat.toPlayer(player, "You're not in a faction...");
             return true;
         }
 
         if (player.getWorld() != Bukkit.getWorlds().get(0)) {
-            player.sendMessage("You cannot claim a chunk here...");
+            RFChat.toPlayer(player, "You cannot claim a chunk here...");
             return true;
         }
 
@@ -162,7 +163,7 @@ public class FactionController {
 
         // Check if this chunk is claimed
         if (isChunkOwnedByFaction(chunkData)) {
-            player.sendMessage("This chunk is already claimed...");
+            RFChat.toPlayer(player, "This chunk is already claimed...");
             return true;
         }
 
@@ -174,7 +175,7 @@ public class FactionController {
                 ChunkData currentChunkData = new ChunkData(currentX, currentZ);
                 FactionData chunkFactionData = getChunkOwner(currentChunkData);
                 if (chunkFactionData != null && !chunkFactionData.equals(factionData)) {
-                    player.sendMessage("Too close to another faction!");
+                    RFChat.toPlayer(player, "This chunk is too close to another faction!");
                     return true;
                 }
             }
@@ -183,25 +184,25 @@ public class FactionController {
         // Check reputation
         int ownedChunksCount = factionData.ownedChunks.size();
         if (!factionData.canAffordChunkCount(ownedChunksCount+1)) {
-            player.sendMessage("Your faction does not have enough reputation...");
+            RFChat.toPlayer(player, "Your faction does not have enough reputation to claim a chunk...");
             return true;
         }
 
         factionData.ownedChunks.add(chunkData);
         dataManager.save();
 
-        player.sendMessage("You claimed this chunk!");
+        RFChat.toPlayer(player, "You claimed this chunk!");
         return true;
     }
 
     public boolean clearChunk(Player player) {
         if (!isPlayerInFaction(player)) {
-            player.sendMessage("You're not in a faction...");
+            RFChat.toPlayer(player, "You're not in a faction...");
             return true;
         }
 
         if (player.getWorld() != Bukkit.getWorlds().get(0)) {
-            player.sendMessage("You cannot clear chunks here...");
+            RFChat.toPlayer(player, "You cannot clear chunks here...");
             return true;
         }
 
@@ -211,18 +212,18 @@ public class FactionController {
         FactionData factionChunkData = getChunkOwner(chunkData);
 
         if (factionChunkData == null) {
-            player.sendMessage("This is not a claimed chunk...");
+            RFChat.toPlayer(player, "This is not a claimed chunk...");
             return true;
         }
 
         if (!factionChunkData.equals(factionData)) {
             int currentChunkCount = factionChunkData.ownedChunks.size();
             if (factionChunkData.canAffordChunkCount(currentChunkCount)) {
-                player.sendMessage("No, you cannot do that");
+                RFChat.toPlayer(player, "No, you cannot do that");
                 return true;
             }
             if (!factionChunkData.canChunkBeCleared(chunkData)) {
-                player.sendMessage("This chunk does not border wilderness...");
+                RFChat.toPlayer(player, "This chunk does not border wilderness...");
                 return true;
             }
         }
@@ -230,7 +231,7 @@ public class FactionController {
         factionChunkData.ownedChunks.remove(chunkData);
         dataManager.save();
 
-        player.sendMessage("Chunk cleared");
+        RFChat.toPlayer(player, "Chunk cleared!");
         return true;
     }
 

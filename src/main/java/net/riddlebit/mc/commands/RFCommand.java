@@ -1,5 +1,6 @@
 package net.riddlebit.mc.commands;
 
+import net.riddlebit.mc.RFChat;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
@@ -120,7 +121,7 @@ public class RFCommand implements TabExecutor {
     private boolean inviteToFaction(String inviteeName, Player inviter) {
         Player invitee = Bukkit.getPlayer(inviteeName);
         if (invitee == null) {
-            inviter.sendMessage("Failed to find player " + inviteeName);
+            RFChat.toPlayer(inviter, "Failed to find player " + inviteeName);
             return true;
         }
         return plugin.factionController.inviteToFaction(inviter, invitee);
@@ -129,7 +130,7 @@ public class RFCommand implements TabExecutor {
     private boolean status(Player player) {
         FactionData factionData = plugin.factionController.getFactionForPlayer(player);
         if (factionData == null) {
-            player.sendMessage("You're not in a faction");
+            RFChat.toPlayer(player, "You're not in a faction...");
             return true;
         }
 
@@ -174,7 +175,7 @@ public class RFCommand implements TabExecutor {
             PlayerData playerData = plugin.dataManager.getPlayerData(player);
             playerData.reputation += reputation;
         } else {
-            player.sendMessage("You're not an operator...");
+            RFChat.toPlayer(player, "You're not an operator...");
         }
     }
 }

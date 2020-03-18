@@ -1,5 +1,6 @@
 package net.riddlebit.mc.controller;
 
+import net.riddlebit.mc.RFChat;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.ChunkData;
 import net.riddlebit.mc.data.ChunkType;
@@ -54,7 +55,7 @@ public class PlayerController {
         } else {
             if (player.getWorld() == Bukkit.getWorlds().get(0)) {
                 if (plugin.treasureController.addTreasure(block)) {
-                    player.sendMessage("Treasure placed!");
+                    RFChat.toPlayer(player, "Treasure placed!");
                 }
             }
         }
@@ -91,14 +92,14 @@ public class PlayerController {
         float reputation = playerData.reputation;
         playerData.reputation = reputation * 0.5f;
         float lostReputation = reputation - playerData.reputation;
-        player.sendMessage("You lost " + (int) lostReputation + " reputation...");
+        player.sendMessage("You lost " + ChatColor.RED + (int) lostReputation + ChatColor.RESET + " reputation...");
 
         Player killer = player.getKiller();
         if (killer != null) {
             PlayerData killerPlayerData = dataManager.getPlayerData(killer);
             float gainedReputation = lostReputation * 0.5f;
             killerPlayerData.reputation += gainedReputation;
-            killer.sendMessage("You gained " + (int) gainedReputation + " reputation!");
+            killer.sendMessage("You gained " + ChatColor.GREEN + (int) gainedReputation + ChatColor.RESET + " reputation!");
         }
 
         // Set death message
