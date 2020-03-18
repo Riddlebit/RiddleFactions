@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerController {
 
@@ -37,6 +38,7 @@ public class PlayerController {
             playerData.reputation = 0;
             dataManager.addPlayerData(playerData);
         }
+        updateBossBarForPlayer(player);
         return playerData;
     }
 
@@ -124,23 +126,17 @@ public class PlayerController {
         ChunkType toChunkType = plugin.factionController.getChunkType(toChunkData);
 
         if (fromChunkType != toChunkType) {
-            switch (toChunkType) {
-                case CLAIMED:
-                    FactionData factionData = plugin.factionController.getChunkOwner(toChunkData);
-                    player.sendMessage("Entering " + factionData.name + " territory!");
-                    break;
-                case BORDER:
-                    factionData = plugin.factionController.chunkBordersToFaction(toChunkData);
-                    if (fromChunkType == ChunkType.WILDERNESS) {
-                        player.sendMessage("Approaching " + factionData.name + " territory!");
-                    } else {
-                        player.sendMessage("Leaving " + factionData.name + " territory");
-                    }
-                    break;
-                case WILDERNESS:
-                    player.sendMessage("Entering wilderness");
-            }
+            updateBossBarForPlayer(player, toChunkData);
         }
+    }
+
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (event.getPlayer().getWorld() != Bukkit.getWorlds().get(0)) return;
+        if (event.getTo() == null) return;
+        Player player = event.getPlayer();
+        Chunk toChunk = event.getTo().getChunk();
+        ChunkData toChunkData = new ChunkData(toChunk.getX(), toChunk.getZ());
+        updateBossBarForPlayer(player, toChunkData);
     }
 
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -178,6 +174,31 @@ public class PlayerController {
                     event.setCancelled(true);
             }
         }
+    }
+
+    public ChunkData getChunkDataForPlayer(Player player) {
+        if (player.getWorld() != Bukkit.getWorlds().get(0)) return null;
+        Chunk chunk = player.getLocation().getChunk();
+        return new ChunkData(chunk.getX(), chunk.getZ());
+    }
+
+    public void resetBossBarForPlayer(Player player) {
+        for (FactionData factionData : dataManager.factions.values()) {
+            factionData.bossBar.removePlayer(player);
+        }
+    }
+
+    public void updateBossBarForPlayer(Player player, ChunkData chunkData) {
+        FactionData factionData = plugin.factionController.getChunkOwner(chunkData);
+        resetBossBarForPlayer(player);
+        if (factionData != null) {
+            factionData.bossBar.addPlayer(player);
+        }
+    }
+
+    public void updateBossBarForPlayer(Player player) {
+        ChunkData chunkData = getChunkDataForPlayer(player);
+        updateBossBarForPlayer(player, chunkData);
     }
 
 }

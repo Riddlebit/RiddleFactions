@@ -10,6 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class RFEventListener implements Listener {
 
@@ -43,6 +44,11 @@ public class RFEventListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         plugin.playerController.onPlayerMove(event);
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+        plugin.playerController.onPlayerTeleport(event);
     }
 
     @EventHandler

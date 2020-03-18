@@ -6,6 +6,8 @@ import dev.morphia.Morphia;
 import dev.morphia.query.Query;
 import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -91,6 +93,7 @@ public class DataManager {
                 for (PlayerData playerData : factionData.players) {
                     players.put(playerData.uuid, playerData);
                 }
+                factionData.bossBar = plugin.getServer().createBossBar(factionData.name, BarColor.WHITE, BarStyle.SOLID);
             }
         }
     }
@@ -98,9 +101,7 @@ public class DataManager {
     private void loadTreasures() {
         Query<TreasureData> query = datastore.createQuery(TreasureData.class);
         List<TreasureData> loadedTreasures = query.find().toList();
-        for (TreasureData treasureData : loadedTreasures) {
-            treasures.add(treasureData);
-        }
+        treasures.addAll(loadedTreasures);
     }
 
     public void save() {

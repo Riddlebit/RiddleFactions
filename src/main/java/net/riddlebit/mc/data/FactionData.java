@@ -1,10 +1,8 @@
 package net.riddlebit.mc.data;
 
-import dev.morphia.annotations.Embedded;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
+import org.bukkit.boss.BossBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +34,9 @@ public class FactionData {
 
     @Embedded
     public List<ChunkData> ownedChunks;
+
+    @Transient
+    public BossBar bossBar;
 
     public float getReputation() {
         float reputation = 0;

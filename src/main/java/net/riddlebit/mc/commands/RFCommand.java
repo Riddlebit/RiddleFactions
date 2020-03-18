@@ -121,7 +121,7 @@ public class RFCommand implements TabExecutor {
     private boolean inviteToFaction(String inviteeName, Player inviter) {
         Player invitee = Bukkit.getPlayer(inviteeName);
         if (invitee == null) {
-            RFChat.toPlayer(inviter, "Failed to find player " + inviteeName);
+            RFChat.toPlayer(inviter, "Failed to find player: " + inviteeName);
             return true;
         }
         return plugin.factionController.inviteToFaction(inviter, invitee);

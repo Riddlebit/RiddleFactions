@@ -5,6 +5,8 @@ import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -37,10 +39,11 @@ public class FactionController {
         PlayerData playerData = dataManager.getPlayerData(player);
         FactionData factionData = new FactionData(playerData);
         factionData.name = factionName;
+        factionData.bossBar = plugin.getServer().createBossBar(factionData.name, BarColor.WHITE, BarStyle.SOLID);
         dataManager.addFactionData(factionData);
 
         RFChat.toPlayer(player, factionName + " was created!");
-        RFChat.broadcast(player.getDisplayName() + " created the faction " + factionName);
+        RFChat.broadcast(player.getDisplayName() + " created the faction " + factionName + "!");
         return true;
     }
 
@@ -136,6 +139,9 @@ public class FactionController {
             dataManager.save();
         } else {
             // Delete faction if there are no players left
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                factionData.bossBar.removePlayer(player);
+            }
             dataManager.deleteFaction(factionData);
         }
 
@@ -193,6 +199,7 @@ public class FactionController {
         dataManager.save();
 
         RFChat.toPlayer(player, "You claimed this chunk!");
+        plugin.playerController.updateBossBarForPlayer(player);
         return true;
     }
 
@@ -233,6 +240,7 @@ public class FactionController {
         dataManager.save();
 
         RFChat.toPlayer(player, "Chunk cleared!");
+        plugin.playerController.updateBossBarForPlayer(player);
         return true;
     }
 
