@@ -40,6 +40,7 @@ public class FactionController {
         dataManager.addFactionData(factionData);
 
         RFChat.toPlayer(player, factionName + " was created!");
+        RFChat.broadcast(player.getDisplayName() + " created the faction " + factionName);
         return true;
     }
 
