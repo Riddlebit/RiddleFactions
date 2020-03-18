@@ -1,5 +1,5 @@
 name: RiddleFactions
-version: 1.0
+version: 1.1
 main: net.riddlebit.mc.RiddleFactions
 api-version: 1.15
 commands:

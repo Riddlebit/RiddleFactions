@@ -170,7 +170,6 @@ public class RFCommand implements TabExecutor {
             message += canAfford ? ChatColor.GREEN : ChatColor.RED;
             message += Integer.toString((int) factionData.getReputation()) + ChatColor.GOLD + " | " + ChatColor.WHITE;
             message += onlinePlayers + "/" + playerCount + ChatColor.GRAY + " players online\n";
-
         }
         message += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(message);
