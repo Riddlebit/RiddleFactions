@@ -139,25 +139,36 @@ public class RFCommand implements TabExecutor {
         float factionReputationRate = plugin.factionController.getReputationRateForFaction(factionData);
         float playerReputationRate = factionReputationRate / onlinePlayersInFaction;
 
-        String status = "";
-        status = "Faction: " + factionData.name + "\n";
-        status += "Reputation: " + (int) playerData.reputation + " / " + (int) factionData.getReputation();
-        status += " (" + (int) playerReputationRate + " / " + (int) factionReputationRate + " per hour)";
+        int ownedChunksCount = factionData.ownedChunks.size();
+        boolean canAfford = factionData.canAffordChunkCount(ownedChunksCount);
 
+        String status = ChatColor.RED + "-> " + ChatColor.GOLD + "Faction Status:\n";
+        status += ChatColor.WHITE + "----------------------------------------\n";
+        status += ChatColor.GOLD + "Faction: " + ChatColor.WHITE + factionData.name + "\n";
+        status += ChatColor.GOLD + "Reputation: ";
+        status += ChatColor.WHITE + Integer.toString((int) playerData.reputation);
+        status += ChatColor.GOLD + " / ";
+        status += ChatColor.WHITE + Integer.toString((int) factionData.getReputation());
+        status += ChatColor.GOLD + " (" + ChatColor.WHITE + (int) playerReputationRate;
+        status += ChatColor.GOLD + " / " + ChatColor.WHITE + (int) factionReputationRate;
+        status += ChatColor.GRAY + " per hour" + ChatColor.GOLD + ")\n";
+        status += "Claimed chunks: " + (canAfford ? ChatColor.GREEN : ChatColor.RED) + ownedChunksCount + "\n";
+        status += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(status);
         return true;
     }
 
     private boolean list(Player player) {
-        String message = ChatColor.BOLD + "---- Faction List ----" + "\n" + ChatColor.RESET;
+        String message = ChatColor.RED + "-> " + ChatColor.GOLD + "Faction List:\n";
+        message += ChatColor.WHITE + "----------------------------------------\n";
         for (FactionData factionData : plugin.dataManager.factions.values()) {
             int chunkCount = factionData.ownedChunks.size();
             boolean canAfford = factionData.canAffordChunkCount(chunkCount);
+            message += ChatColor.WHITE + factionData.name + ChatColor.GOLD + " | ";
             message += canAfford ? ChatColor.GREEN : ChatColor.RED;
-            message += factionData.name + " - " + (int) factionData.getReputation() + "\n";
+            message += (int) factionData.getReputation() + "\n";
         }
-        message += ChatColor.RESET;
-        message += ChatColor.BOLD + "--------------------";
+        message += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(message);
         return true;
     }
