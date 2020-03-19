@@ -2,11 +2,14 @@ package net.riddlebit.mc.data;
 
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
+import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity(value = "factions", noClassnameStored = true)
 public class FactionData {
@@ -46,7 +49,7 @@ public class FactionData {
         return reputation;
     }
 
-    public boolean isChunkOwnedByFaction(ChunkData chunkData) {
+    public boolean isOwnerOfChunk(ChunkData chunkData) {
         return ownedChunks.contains(chunkData);
     }
 
@@ -57,7 +60,7 @@ public class FactionData {
         chunksToTest.add(new ChunkData(chunkData.x, chunkData.z-1));
         chunksToTest.add(new ChunkData(chunkData.x, chunkData.z+1));
         for (ChunkData chunkToTest : chunksToTest) {
-            if (!isChunkOwnedByFaction(chunkToTest)) {
+            if (!isOwnerOfChunk(chunkToTest)) {
                 return true;
             }
         }
@@ -70,6 +73,27 @@ public class FactionData {
             cost += 10f * Math.floor((((chunkCount - 9) * (chunkCount - 8)) / 2f));
         }
         return cost <= getReputation();
+    }
+
+    public List<Player> getOnlinePlayersInFaction() {
+        List<Player> onlinePlayers = new ArrayList<>();
+        for (PlayerData playerData : players) {
+            Player player = Bukkit.getPlayer(UUID.fromString(playerData.uuid));
+            if (player != null && player.isOnline()) {
+                onlinePlayers.add(player);
+            }
+        }
+        return onlinePlayers;
+    }
+
+    public List<Player> getAlivePlayersInFaction() {
+        List<Player> alivePlayers = new ArrayList<>();
+        for (Player player : getOnlinePlayersInFaction()) {
+            if (!player.isDead()) {
+                alivePlayers.add(player);
+            }
+        }
+        return alivePlayers;
     }
 
     @Override

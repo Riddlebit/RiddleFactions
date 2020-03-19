@@ -137,7 +137,7 @@ public class RFCommand implements TabExecutor {
         }
 
         PlayerData playerData = plugin.dataManager.getPlayerData(player);
-        int onlinePlayersInFaction = plugin.factionController.getOnlinePlayersInFaction(factionData).size();
+        int onlinePlayersInFaction = factionData.getOnlinePlayersInFaction().size();
         float factionReputationRate = plugin.factionController.getReputationRateForFaction(factionData);
         float playerReputationRate = factionReputationRate / onlinePlayersInFaction;
 
@@ -167,7 +167,7 @@ public class RFCommand implements TabExecutor {
             int chunkCount = factionData.ownedChunks.size();
             boolean canAfford = factionData.canAffordChunkCount(chunkCount);
             int playerCount = factionData.players.size();
-            int onlinePlayers = plugin.factionController.getOnlinePlayersInFaction(factionData).size();
+            int onlinePlayers = factionData.getOnlinePlayersInFaction().size();
             message += ChatColor.WHITE + factionData.name + ChatColor.GOLD + " | ";
             message += canAfford ? ChatColor.GREEN : ChatColor.RED;
             message += Integer.toString((int) factionData.getReputation()) + ChatColor.GOLD + " | " + ChatColor.WHITE;
