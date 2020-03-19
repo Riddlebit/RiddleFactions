@@ -2,10 +2,12 @@ package net.riddlebit.mc.commands;
 
 import net.riddlebit.mc.RFChat;
 import net.riddlebit.mc.RiddleFactions;
+import net.riddlebit.mc.data.ChunkData;
 import net.riddlebit.mc.data.FactionData;
 import net.riddlebit.mc.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -55,6 +57,8 @@ public class RFCommand implements TabExecutor {
                 return status(player);
             case "list":
                 return list(player);
+            case "inspect":
+                return inspect(player);
             case "claim":
                 return claimChunk(player);
             case "clear":
@@ -78,7 +82,7 @@ public class RFCommand implements TabExecutor {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] args) {
         List<String> returnList = new ArrayList<>();
         if (args.length == 1) {
-            String[] validArgs = {"status", "list", "create", "invite", "join", "leave", "claim", "clear"};
+            String[] validArgs = {"status", "list", "inspect", "create", "invite", "join", "leave", "claim", "clear"};
             for (String arg : validArgs) {
                 if (arg.startsWith(args[0].toLowerCase())) {
                     returnList.add(arg);
@@ -164,7 +168,6 @@ public class RFCommand implements TabExecutor {
         String message = ChatColor.RED + "-> " + ChatColor.GOLD + "Faction List:\n";
         message += ChatColor.WHITE + "----------------------------------------\n";
         for (FactionData factionData : plugin.dataManager.factions.values()) {
-            int chunkCount = factionData.ownedChunks.size();
             boolean isSustainable = plugin.chunkController.isFactionSustainable(factionData);
             int playerCount = factionData.players.size();
             int onlinePlayers = factionData.getOnlinePlayersInFaction().size();
@@ -175,6 +178,18 @@ public class RFCommand implements TabExecutor {
         }
         message += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(message);
+        return true;
+    }
+
+    private boolean inspect(Player player) {
+        Chunk chunk = player.getLocation().getChunk();
+        ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
+        if (plugin.chunkController.isChunkWithinSpawnRadius(chunkData)) {
+            RFChat.toPlayer(player, "This is a spawn chunk, it cant be claimed...");
+        } else {
+            float chunkCost = plugin.chunkController.getChunkReputationCost(chunkData);
+            RFChat.toPlayer(player, "This chunk costs " + chunkCost + " reputation");
+        }
         return true;
     }
 
