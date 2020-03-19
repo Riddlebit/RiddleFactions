@@ -142,7 +142,7 @@ public class RFCommand implements TabExecutor {
         float playerReputationRate = factionReputationRate / onlinePlayersInFaction;
 
         int ownedChunksCount = factionData.ownedChunks.size();
-        boolean canAfford = factionData.canAffordChunkCount(ownedChunksCount);
+        boolean isSustainable = plugin.chunkController.isFactionSustainable(factionData);
 
         String status = ChatColor.RED + "-> " + ChatColor.GOLD + "Faction Status:\n";
         status += ChatColor.WHITE + "----------------------------------------\n";
@@ -154,7 +154,7 @@ public class RFCommand implements TabExecutor {
         status += ChatColor.GOLD + " (" + ChatColor.WHITE + (int) playerReputationRate;
         status += ChatColor.GOLD + " / " + ChatColor.WHITE + (int) factionReputationRate;
         status += ChatColor.GRAY + " per hour" + ChatColor.GOLD + ")\n";
-        status += "Claimed chunks: " + (canAfford ? ChatColor.GREEN : ChatColor.RED) + ownedChunksCount + "\n";
+        status += "Claimed chunks: " + (isSustainable ? ChatColor.GREEN : ChatColor.RED) + ownedChunksCount + "\n";
         status += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(status);
         return true;
@@ -165,11 +165,11 @@ public class RFCommand implements TabExecutor {
         message += ChatColor.WHITE + "----------------------------------------\n";
         for (FactionData factionData : plugin.dataManager.factions.values()) {
             int chunkCount = factionData.ownedChunks.size();
-            boolean canAfford = factionData.canAffordChunkCount(chunkCount);
+            boolean isSustainable = plugin.chunkController.isFactionSustainable(factionData);
             int playerCount = factionData.players.size();
             int onlinePlayers = factionData.getOnlinePlayersInFaction().size();
             message += ChatColor.WHITE + factionData.name + ChatColor.GOLD + " | ";
-            message += canAfford ? ChatColor.GREEN : ChatColor.RED;
+            message += isSustainable ? ChatColor.GREEN : ChatColor.RED;
             message += Integer.toString((int) factionData.getReputation()) + ChatColor.GOLD + " | " + ChatColor.WHITE;
             message += onlinePlayers + "/" + playerCount + ChatColor.GRAY + " players online\n";
         }
