@@ -67,14 +67,6 @@ public class FactionData {
         return false;
     }
 
-    public boolean canAffordChunkCount(int chunkCount) {
-        float cost = 100f * chunkCount;
-        if (chunkCount > 9) {
-            cost += 10f * Math.floor((((chunkCount - 9) * (chunkCount - 8)) / 2f));
-        }
-        return cost <= getReputation();
-    }
-
     public List<Player> getOnlinePlayersInFaction() {
         List<Player> onlinePlayers = new ArrayList<>();
         for (PlayerData playerData : players) {

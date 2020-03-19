@@ -9,8 +9,6 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
 
-import java.util.*;
-
 public class FactionController {
 
     private RiddleFactions plugin;
@@ -62,7 +60,7 @@ public class FactionController {
         }
 
         if (inviterData.equals(inviteeData)) {
-            RFChat.toPlayer(inviter, "You cannot invite yourself...");
+            RFChat.toPlayer(inviter, "You can't invite yourself...");
             return true;
         }
 
@@ -160,7 +158,7 @@ public class FactionController {
         }
 
         if (player.getWorld() != Bukkit.getWorlds().get(0)) {
-            RFChat.toPlayer(player, "You cannot claim a chunk here...");
+            RFChat.toPlayer(player, "You can't claim a chunk here...");
             return true;
         }
 
@@ -174,24 +172,22 @@ public class FactionController {
             return true;
         }
 
+        // Check if this chunk is a spawn chunk
+        if (plugin.chunkController.isChunkWithinSpawnRadius(chunkData)) {
+            RFChat.toPlayer(player, "This is a spawn chunk. You can't claim it!");
+            return true;
+        }
+
         // Check if border chunks are claimed
-        for (int x = -1; x < 2; x++) {
-            for (int z = -1; z < 2; z++) {
-                int currentX = chunk.getX()+x;
-                int currentZ = chunk.getZ()+z;
-                ChunkData currentChunkData = new ChunkData(currentX, currentZ);
-                FactionData chunkFactionData = getChunkOwner(currentChunkData);
-                if (chunkFactionData != null && !chunkFactionData.equals(factionData)) {
-                    RFChat.toPlayer(player, "This chunk is too close to another faction!");
-                    return true;
-                }
-            }
+        FactionData borderFactionData = chunkBordersToFaction(chunkData);
+        if (borderFactionData != null && !borderFactionData.equals(factionData)) {
+            RFChat.toPlayer(player, "This chunk is too close to another faction!");
+            return true;
         }
 
         // Check reputation
-        int ownedChunksCount = factionData.ownedChunks.size();
-        if (!factionData.canAffordChunkCount(ownedChunksCount+1)) {
-            RFChat.toPlayer(player, "Your faction does not have enough reputation to claim a chunk...");
+        if (!plugin.chunkController.canFactionAffordChunk(factionData, chunkData)) {
+            RFChat.toPlayer(player, "Your faction does not have enough reputation to claim this chunk...");
             return true;
         }
 
@@ -210,33 +206,32 @@ public class FactionController {
         }
 
         if (player.getWorld() != Bukkit.getWorlds().get(0)) {
-            RFChat.toPlayer(player, "You cannot clear chunks here...");
+            RFChat.toPlayer(player, "You can't clear chunks here...");
             return true;
         }
 
         Chunk chunk = player.getLocation().getChunk();
         ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
         FactionData factionData = getFactionForPlayer(player);
-        FactionData factionChunkData = getChunkOwner(chunkData);
+        FactionData chunkFactionData = getChunkOwner(chunkData);
 
-        if (factionChunkData == null) {
+        if (chunkFactionData == null) {
             RFChat.toPlayer(player, "This is not a claimed chunk...");
             return true;
         }
 
-        if (!factionChunkData.equals(factionData)) {
-            int currentChunkCount = factionChunkData.ownedChunks.size();
-            if (factionChunkData.canAffordChunkCount(currentChunkCount)) {
-                RFChat.toPlayer(player, "No, you cannot do that");
+        if (!chunkFactionData.equals(factionData)) {
+            if (plugin.chunkController.isFactionSustainable(chunkFactionData)) {
+                RFChat.toPlayer(player, "You can't clear this chunk. Faction is sustainable!");
                 return true;
             }
-            if (!factionChunkData.canChunkBeCleared(chunkData)) {
+            if (!chunkFactionData.canChunkBeCleared(chunkData)) {
                 RFChat.toPlayer(player, "This chunk does not border wilderness...");
                 return true;
             }
         }
 
-        factionChunkData.ownedChunks.remove(chunkData);
+        chunkFactionData.ownedChunks.remove(chunkData);
         dataManager.save();
 
         RFChat.toPlayer(player, "Chunk cleared!");
