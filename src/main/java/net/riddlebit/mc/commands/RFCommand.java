@@ -30,7 +30,7 @@ public class RFCommand implements TabExecutor {
         Player player = (Player) sender;
 
         if (args.length < 1) return false;
-        switch (args[0]) {
+        switch (args[0].toLowerCase()) {
             case "create":
                 if (args.length > 1) {
                     String factionName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
@@ -78,27 +78,29 @@ public class RFCommand implements TabExecutor {
     public List<String> onTabComplete(CommandSender commandSender, Command command, String label, String[] args) {
         List<String> returnList = new ArrayList<>();
         if (args.length == 1) {
-            returnList.add("status");
-            returnList.add("list");
-            returnList.add("create");
-            returnList.add("invite");
-            returnList.add("join");
-            returnList.add("leave");
-            returnList.add("claim");
-            returnList.add("clear");
+            String[] validArgs = {"status", "list", "create", "invite", "join", "leave", "claim", "clear"};
+            for (String arg : validArgs) {
+                if (arg.startsWith(args[0].toLowerCase())) {
+                    returnList.add(arg);
+                }
+            }
         } else if (args.length > 1) {
             switch (args[0].toLowerCase()) {
                 case "join":
+                    String factionName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     for (FactionData factionData : plugin.dataManager.factions.values()) {
-                        returnList.add(factionData.name);
+                        if (factionData.name.toLowerCase().contains(factionName.toLowerCase())) {
+                            returnList.add(factionData.name);
+                        }
                     }
                     break;
                 case "invite":
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        returnList.add(player.getDisplayName());
+                        if (player.getDisplayName().toLowerCase().contains(args[1].toLowerCase())) {
+                            returnList.add(player.getDisplayName());
+                        }
                     }
                     break;
-
             }
         }
         return returnList;
