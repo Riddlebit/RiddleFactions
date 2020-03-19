@@ -112,7 +112,7 @@ public class FactionController {
         dataManager.save();
 
         RFChat.toPlayer(player, "You have joined " + factionData.name);
-        for (Player factionPlayer : getOnlinePlayersInFaction(factionData)) {
+        for (Player factionPlayer : factionData.getOnlinePlayersInFaction()) {
             if (factionPlayer != player) {
                 RFChat.toPlayer(factionPlayer, player.getDisplayName() + " has joined your faction!");
             }
@@ -133,7 +133,7 @@ public class FactionController {
         factionData.players.remove(playerData);
         if (factionData.players.size() > 0) {
             // Broadcast to other faction members
-            for (Player factionPlayer : getOnlinePlayersInFaction(factionData)) {
+            for (Player factionPlayer : factionData.getOnlinePlayersInFaction()) {
                 RFChat.toPlayer(factionPlayer, player.getDisplayName() + " left your faction!");
             }
             dataManager.save();
@@ -246,11 +246,7 @@ public class FactionController {
 
     public boolean isChunkOwnedByFaction(ChunkData chunkData) {
         for (FactionData factionData : dataManager.factions.values()) {
-            for (ChunkData ownedChunkData : factionData.ownedChunks) {
-                if (ownedChunkData.equals(chunkData)) {
-                    return true;
-                }
-            }
+            if (factionData.isOwnerOfChunk(chunkData)) return true;
         }
         return false;
     }
@@ -307,27 +303,6 @@ public class FactionController {
         return null;
     }
 
-    public List<Player> getOnlinePlayersInFaction(FactionData factionData) {
-        List<Player> players = new ArrayList<>();
-        for (PlayerData playerData : factionData.players) {
-            Player player = Bukkit.getPlayer(UUID.fromString(playerData.uuid));
-            if (player != null && player.isOnline()) {
-                players.add(player);
-            }
-        }
-        return players;
-    }
-
-    public List<Player> getAlivePlayersInFaction(FactionData factionData) {
-        List<Player> alivePlayers = new ArrayList<>();
-        for (Player player : getOnlinePlayersInFaction(factionData)) {
-            if (!player.isDead()) {
-                alivePlayers.add(player);
-            }
-        }
-        return alivePlayers;
-    }
-
     public float getReputationRateForFaction(FactionData factionData) {
         float reputationRate = reputationBaseRate;
         for (TreasureData treasureData : plugin.treasureController.getAllTreasuresInFaction(factionData)) {
@@ -345,7 +320,7 @@ public class FactionController {
     public void updateReputation() {
         for (FactionData factionData : dataManager.factions.values()) {
 
-            int playerCount = getAlivePlayersInFaction(factionData).size();
+            int playerCount = factionData.getAlivePlayersInFaction().size();
 
             if (playerCount > 0) {
                 float reputationRate = getReputationRateForFaction(factionData);
