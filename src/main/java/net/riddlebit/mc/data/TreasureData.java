@@ -1,5 +1,6 @@
 package net.riddlebit.mc.data;
 
+import com.google.gson.annotations.Expose;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import org.bson.types.ObjectId;
@@ -24,10 +25,11 @@ public class TreasureData {
     @Id
     private ObjectId id;
 
+    @Expose
     public String blockType;
-    public int x;
-    public int y;
-    public int z;
+
+    @Expose
+    public int x, y, z;
 
     @Override
     public boolean equals(Object o) {

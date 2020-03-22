@@ -1,5 +1,7 @@
 package net.riddlebit.mc.data;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.Objects;
 
 public class ChunkData {
@@ -10,8 +12,8 @@ public class ChunkData {
         this.z = z;
     }
 
-    public int x;
-    public int z;
+    @Expose
+    public int x, z;
 
     @Override
     public boolean equals(Object o) {

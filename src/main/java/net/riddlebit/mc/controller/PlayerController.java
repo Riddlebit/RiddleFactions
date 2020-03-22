@@ -151,7 +151,7 @@ public class PlayerController {
         FactionData chunkFactionData = plugin.factionController.getChunkOwner(chunkData);
 
         if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
-            // Player is not in this faction -> cancel block break
+            // Player is not in this faction -> cancel interaction with certain blocks
             switch (block.getType()) {
                 case OAK_DOOR:
                 case BIRCH_DOOR:
