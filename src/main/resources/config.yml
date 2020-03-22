@@ -3,5 +3,6 @@ core-radius: 16
 chunk-base-cost: 100
 chunk-cost-multiplier: 10
 reputation-base-rate: 100
+db-host: localhost
 db-name: riddleFactions
 db-save-frequency: 18000

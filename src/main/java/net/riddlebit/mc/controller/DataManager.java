@@ -35,8 +35,9 @@ public class DataManager {
         morphia.map(PlayerData.class);
         morphia.map(FactionData.class);
 
+        String dbHost = plugin.config.getString("db-host");
         String dbName = plugin.config.getString("db-name");
-        datastore = morphia.createDatastore(new MongoClient(), dbName);
+        datastore = morphia.createDatastore(new MongoClient(dbHost), dbName);
         datastore.ensureIndexes();
 
         // Load from database
