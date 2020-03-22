@@ -1,5 +1,6 @@
 package net.riddlebit.mc.data;
 
+import com.google.gson.annotations.Expose;
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
@@ -18,10 +19,13 @@ public class PlayerData {
     @Id
     private ObjectId id;
 
+    @Expose
     public String uuid;
 
+    @Expose
     public String name;
 
+    @Expose
     public float reputation;
 
     public boolean isDead() {
