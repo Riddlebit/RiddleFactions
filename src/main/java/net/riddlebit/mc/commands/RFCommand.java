@@ -117,7 +117,7 @@ public class RFCommand implements TabExecutor {
 
     private boolean createFaction(String factionName, Player player) {
         if (factionName == null) return false;
-        return plugin.factionController.createFaction(factionName, player);
+        return plugin.factionController.createFaction(factionName.trim(), player);
     }
 
     private boolean joinFaction(String factionName, Player player) {
