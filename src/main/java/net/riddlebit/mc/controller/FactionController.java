@@ -28,7 +28,7 @@ public class FactionController {
             return true;
         }
 
-        if (dataManager.factions.containsKey(factionName)) {
+        if (isFactionNameTaken(factionName)) {
             RFChat.toPlayer(player, "A faction with that name already exists...");
             return true;
         }
@@ -243,6 +243,15 @@ public class FactionController {
         RFChat.toPlayer(player, "Chunk cleared!");
         plugin.playerController.updateBossBarForPlayer(player);
         return true;
+    }
+
+    public boolean isFactionNameTaken(String factionName) {
+        for (FactionData factionData : dataManager.factions.values()) {
+            if (factionName.equalsIgnoreCase(factionData.name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isChunkOwnedByFaction(ChunkData chunkData) {

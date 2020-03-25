@@ -97,7 +97,7 @@ public class FactionData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FactionData that = (FactionData) o;
-        return name.equals(that.name);
+        return name.equalsIgnoreCase(that.name);
     }
 
     @Override
