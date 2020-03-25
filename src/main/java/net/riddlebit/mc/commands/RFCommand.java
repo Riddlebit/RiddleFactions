@@ -52,7 +52,11 @@ public class RFCommand implements TabExecutor {
                 }
                 break;
             case "leave":
-                return leaveFaction(player);
+                if (args.length > 1) {
+                    String factionName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                    return leaveFaction(factionName, player);
+                }
+                break;
             case "status":
                 return status(player);
             case "list":
@@ -91,6 +95,7 @@ public class RFCommand implements TabExecutor {
         } else if (args.length > 1) {
             switch (args[0].toLowerCase()) {
                 case "join":
+                case "leave":
                     String factionName = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
                     for (FactionData factionData : plugin.dataManager.factions.values()) {
                         if (factionData.name.toLowerCase().contains(factionName.toLowerCase())) {
@@ -120,8 +125,8 @@ public class RFCommand implements TabExecutor {
         return plugin.factionController.joinFaction(factionName, player);
     }
 
-    private boolean leaveFaction(Player player) {
-        return plugin.factionController.leaveFaction(player);
+    private boolean leaveFaction(String factionName, Player player) {
+        return plugin.factionController.leaveFaction(factionName, player);
     }
 
     private boolean inviteToFaction(String inviteeName, Player inviter) {
