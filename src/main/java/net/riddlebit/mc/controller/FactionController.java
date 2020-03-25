@@ -77,7 +77,7 @@ public class FactionController {
 
         Invite invite = null;
         for (Invite i : dataManager.invites) {
-            if (i.factionData.name.equals(factionName) && i.invitee.equals(playerData)) {
+            if (i.factionData.name.equalsIgnoreCase(factionName) && i.invitee.equals(playerData)) {
                 invite = i;
             }
         }
@@ -118,7 +118,7 @@ public class FactionController {
         return true;
     }
 
-    public boolean leaveFaction(Player player) {
+    public boolean leaveFaction(String factionName, Player player) {
         if (!isPlayerInFaction(player)) {
             RFChat.toPlayer(player, "You're not in a faction...");
             return true;
@@ -126,6 +126,12 @@ public class FactionController {
 
         FactionData factionData = getFactionForPlayer(player);
         PlayerData playerData = dataManager.getPlayerData(player);
+
+        // Player must specify faction name as a safety check
+        if (!factionData.name.equalsIgnoreCase(factionName)) {
+            RFChat.toPlayer(player, "Please specify the name of your faction...");
+            return true;
+        }
 
         // Remove player from faction
         factionData.players.remove(playerData);
