@@ -240,7 +240,12 @@ public class FactionController {
         chunkFactionData.ownedChunks.remove(chunkData);
         dataManager.save();
 
-        RFChat.toPlayer(player, "Chunk cleared!");
+        if (plugin.factionController.getFactionForPlayer(player).equals(chunkFactionData)) {
+            RFChat.toPlayer(player, "Chunk cleared!");
+        } else {
+            RFChat.broadcast(player.getDisplayName() + " just cleared a chunk from " + chunkFactionData.name + "!");
+        }
+
         plugin.playerController.updateBossBarForPlayer(player);
         return true;
     }
