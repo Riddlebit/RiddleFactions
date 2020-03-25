@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBucketEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -173,6 +174,21 @@ public class PlayerController {
                 case DARK_OAK_FENCE_GATE:
                     event.setCancelled(true);
             }
+        }
+    }
+
+    public void onPlayerBucketEvent(PlayerBucketEvent event) {
+        Block block = event.getBlockClicked();
+        Chunk chunk = block.getChunk();
+        Player player = event.getPlayer();
+
+        FactionData factionData = plugin.factionController.getFactionForPlayer(player);
+        ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
+        FactionData chunkFactionData = plugin.factionController.getChunkOwner(chunkData);
+
+        if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
+            // Player is not in this faction -> cancel bucket event
+            event.setCancelled(true);
         }
     }
 
