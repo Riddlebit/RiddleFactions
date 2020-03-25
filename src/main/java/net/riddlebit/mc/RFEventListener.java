@@ -7,10 +7,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.player.*;
 
 public class RFEventListener implements Listener {
 
@@ -27,18 +24,18 @@ public class RFEventListener implements Listener {
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        plugin.playerController.onPlayerPlaceBlock(event);
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        plugin.playerController.onPlayerInteract(event);
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        plugin.playerController.onPlayerBreakBlock(event);
+    public void onPlayerBucketFilLEvent(PlayerBucketFillEvent event) {
+        plugin.playerController.onPlayerBucketEvent(event);
     }
 
     @EventHandler
-    public void onPlayerDeath(PlayerDeathEvent event) {
-        plugin.playerController.onPlayerDeath(event);
+    public void onPlayerBucketEmptyEvent(PlayerBucketEmptyEvent event) {
+        plugin.playerController.onPlayerBucketEvent(event);
     }
 
     @EventHandler
@@ -52,8 +49,18 @@ public class RFEventListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        plugin.playerController.onPlayerInteract(event);
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        plugin.playerController.onPlayerDeath(event);
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        plugin.playerController.onPlayerPlaceBlock(event);
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        plugin.playerController.onPlayerBreakBlock(event);
     }
 
     @EventHandler
