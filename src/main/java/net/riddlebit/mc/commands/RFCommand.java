@@ -190,7 +190,7 @@ public class RFCommand implements TabExecutor {
         Chunk chunk = player.getLocation().getChunk();
         ChunkData chunkData = new ChunkData(chunk.getX(), chunk.getZ());
         if (plugin.chunkController.isChunkWithinSpawnRadius(chunkData)) {
-            RFChat.toPlayer(player, "This is a spawn chunk, it cant be claimed...");
+            RFChat.toPlayer(player, "This is a spawn chunk, it can't be claimed...");
         } else {
             float chunkCost = plugin.chunkController.getChunkReputationCost(chunkData);
             RFChat.toPlayer(player, "This chunk costs " + chunkCost + " reputation");

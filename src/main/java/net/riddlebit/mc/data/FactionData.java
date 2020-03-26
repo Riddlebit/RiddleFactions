@@ -1,6 +1,5 @@
 package net.riddlebit.mc.data;
 
-import com.google.gson.annotations.Expose;
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
@@ -31,15 +30,12 @@ public class FactionData {
     @Id
     private ObjectId id;
 
-    @Expose
     public String name;
 
     @Reference
-    @Expose
     public List<PlayerData> players;
 
     @Embedded
-    @Expose
     public List<ChunkData> ownedChunks;
 
     @Transient
