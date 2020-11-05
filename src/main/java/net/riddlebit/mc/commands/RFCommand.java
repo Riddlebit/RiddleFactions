@@ -164,6 +164,10 @@ public class RFCommand implements TabExecutor {
         status += ChatColor.GOLD + " / " + ChatColor.WHITE + (int) factionReputationRate;
         status += ChatColor.GRAY + " per hour" + ChatColor.GOLD + ")\n";
         status += "Claimed chunks: " + (isSustainable ? ChatColor.GREEN : ChatColor.RED) + ownedChunksCount + "\n";
+        status += ChatColor.GOLD + "Members: \n";
+        for (String members : factionData.getPlayersInFaction()) {
+            status += " - " + ChatColor.WHITE + members + ChatColor.GOLD + " (" + ChatColor.WHITE + playerData.reputation + ChatColor.GOLD + ")" + "\n";
+        }
         status += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(status);
         return true;

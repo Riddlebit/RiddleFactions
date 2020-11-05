@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import dev.morphia.annotations.*;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 
@@ -90,6 +91,16 @@ public class FactionData {
             }
         }
         return alivePlayers;
+    }
+
+    public List<String> getPlayersInFaction() {
+        List<String> playersInFaction = new ArrayList<>();
+        for (PlayerData playerData : players) {
+            OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(playerData.uuid));
+
+            playersInFaction.add(player.getPlayer().getDisplayName());
+        }
+        return playersInFaction;
     }
 
     @Override
