@@ -152,6 +152,7 @@ public class RFCommand implements TabExecutor {
 
         int ownedChunksCount = factionData.ownedChunks.size();
         boolean isSustainable = plugin.chunkController.isFactionSustainable(factionData);
+        String factionMembers = Arrays.toString(factionData.getPlayersInFaction().toArray());
 
         String status = ChatColor.RED + "-> " + ChatColor.GOLD + "Faction Status:\n";
         status += ChatColor.WHITE + "----------------------------------------\n";
@@ -165,9 +166,10 @@ public class RFCommand implements TabExecutor {
         status += ChatColor.GRAY + " per hour" + ChatColor.GOLD + ")\n";
         status += "Claimed chunks: " + (isSustainable ? ChatColor.GREEN : ChatColor.RED) + ownedChunksCount + "\n";
         status += ChatColor.GOLD + "Members: \n";
-        for (String members : factionData.getPlayersInFaction()) {
-            status += " - " + ChatColor.WHITE + members + ChatColor.GOLD + " (" + ChatColor.WHITE + playerData.reputation + ChatColor.GOLD + ")" + "\n";
-        }
+        status += ChatColor.GOLD + " - " + ChatColor.WHITE + factionMembers
+                .replace("[[", "")
+                .replace(",", ChatColor.GOLD + " (" + ChatColor.WHITE )
+                .replace("]]", ChatColor.GOLD + " )" )+ "\n";
         status += ChatColor.WHITE + "----------------------------------------";
         player.sendMessage(status);
         return true;

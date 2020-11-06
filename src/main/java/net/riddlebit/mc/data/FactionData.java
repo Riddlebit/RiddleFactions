@@ -2,6 +2,7 @@ package net.riddlebit.mc.data;
 
 import com.google.gson.annotations.Expose;
 import dev.morphia.annotations.*;
+import java.util.Collections;
 import org.bson.types.ObjectId;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -93,14 +94,14 @@ public class FactionData {
         return alivePlayers;
     }
 
-    public List<String> getPlayersInFaction() {
-        List<String> playersInFaction = new ArrayList<>();
+    public List<Object> getPlayersInFaction() {
+        List<Object> playersInFaction = new ArrayList<>();
         for (PlayerData playerData : players) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(UUID.fromString(playerData.uuid));
-
             playersInFaction.add(player.getPlayer().getDisplayName());
+            playersInFaction.add(playerData.reputation);
         }
-        return playersInFaction;
+        return Collections.singletonList(playersInFaction);
     }
 
     @Override
