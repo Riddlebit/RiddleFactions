@@ -11,6 +11,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Door;
+import org.bukkit.block.data.type.Gate;
+import org.bukkit.block.data.type.TrapDoor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -153,27 +157,11 @@ public class PlayerController {
 
         if (chunkFactionData != null && (factionData == null || !factionData.equals(chunkFactionData))) {
             // Player is not in this faction -> cancel interaction with certain blocks
-            switch (block.getType()) {
-                case OAK_DOOR:
-                case BIRCH_DOOR:
-                case ACACIA_DOOR:
-                case JUNGLE_DOOR:
-                case SPRUCE_DOOR:
-                case DARK_OAK_DOOR:
-                case OAK_TRAPDOOR:
-                case BIRCH_TRAPDOOR:
-                case ACACIA_TRAPDOOR:
-                case JUNGLE_TRAPDOOR:
-                case SPRUCE_TRAPDOOR:
-                case DARK_OAK_TRAPDOOR:
-                case OAK_FENCE_GATE:
-                case BIRCH_FENCE_GATE:
-                case ACACIA_FENCE_GATE:
-                case JUNGLE_FENCE_GATE:
-                case SPRUCE_FENCE_GATE:
-                case DARK_OAK_FENCE_GATE:
-                    event.setCancelled(true);
-            }
+
+            BlockData blockData = block.getBlockData();
+
+            if (blockData instanceof Door || blockData instanceof TrapDoor || blockData instanceof Gate)
+                event.setCancelled(true);
         }
     }
 
