@@ -23,16 +23,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.14</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.morphia.morphia</groupId>
-            <artifactId>core</artifactId>
-            <version>1.6.1</version>
-        </dependency>
-        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.10.1</version>

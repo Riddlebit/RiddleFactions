@@ -4,7 +4,6 @@ import net.riddlebit.mc.RiddleFactions;
 import net.riddlebit.mc.data.*;
 import net.riddlebit.mc.data.store.RFDatastore;
 import net.riddlebit.mc.data.store.RFJsonStore;
-import net.riddlebit.mc.data.store.RFMongoStore;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.entity.Player;
@@ -33,11 +32,6 @@ public class DataManager {
         switch (dataStoreType.trim().toLowerCase()) {
             case "json":
                 datastore = new RFJsonStore(plugin.getDataFolder());
-                break;
-            case "mongo":
-                String dbHost = plugin.config.getString("db-host");
-                String dbName = plugin.config.getString("db-name");
-                datastore = new RFMongoStore(dbHost, dbName);
                 break;
             default:
                 plugin.getLogger().severe("Invalid datastore in config: " + dataStoreType);
